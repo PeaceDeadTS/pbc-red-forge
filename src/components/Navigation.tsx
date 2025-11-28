@@ -2,14 +2,20 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, Globe } from 'lucide-react';
+import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, Globe, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { AuthModal } from '@/components/auth';
 
 export const Navigation = () => {
   const { t, i18n } = useTranslation();
   const location = useLocation();
+  const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
 
   const toggleLanguage = () => {
     const newLang = i18n.language === 'en' ? 'ru' : 'en';
@@ -20,8 +26,16 @@ export const Navigation = () => {
     { path: '/', label: t('nav.home'), icon: Home },
     { path: '/browse', label: t('nav.browse'), icon: Grid3x3 },
     { path: '/generate', label: t('nav.generate'), icon: Wand2 },
-    { path: '/profile', label: t('nav.profile'), icon: User },
   ];
+
+  const userInitials = user
+    ? (user.display_name || user.username)
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .toUpperCase()
+        .slice(0, 2)
+    : '';
 
   return (
     <nav className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-xl">
@@ -76,9 +90,47 @@ export const Navigation = () => {
               <Globe className="h-5 w-5" />
             </Button>
 
-            <Button className="hidden sm:flex bg-gradient-primary text-primary-foreground hover:shadow-glow transition-all duration-300">
-              {t('nav.signIn')}
-            </Button>
+            {isAuthenticated && user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+                    <Avatar className="h-9 w-9">
+                      <AvatarImage src={user.avatar_url || undefined} />
+                      <AvatarFallback className="bg-gradient-primary text-primary-foreground text-sm">
+                        {userInitials}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium">{user.display_name || user.username}</p>
+                      <p className="text-xs text-muted-foreground">@{user.username}</p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      {t('nav.profile')}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => logout()} className="cursor-pointer text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t('auth.signOut')}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                className="hidden sm:flex bg-gradient-primary text-primary-foreground hover:shadow-glow transition-all duration-300"
+                onClick={() => setAuthModalOpen(true)}
+              >
+                {t('nav.signIn')}
+              </Button>
+            )}
 
             {/* Mobile Menu Toggle */}
             <Button
@@ -123,13 +175,34 @@ export const Navigation = () => {
                   </Link>
                 );
               })}
-              <Button className="w-full mt-2 bg-gradient-primary text-primary-foreground">
-                {t('nav.signIn')}
-              </Button>
+              {isAuthenticated ? (
+                  <Button
+                    variant="outline"
+                    className="w-full mt-2"
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" />
+                    {t('auth.signOut')}
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full mt-2 bg-gradient-primary text-primary-foreground"
+                    onClick={() => {
+                      setAuthModalOpen(true);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    {t('nav.signIn')}
+                  </Button>
+                )}
             </div>
           </motion.div>
         )}
       </div>
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </nav>
   );
 };

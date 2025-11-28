@@ -47,5 +47,41 @@
     "loading": "Загрузка...",
     "error": "Произошла ошибка",
     "noResults": "Результаты не найдены"
+  },
+  "auth": {
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signOut": "Выйти",
+    "loginOrEmail": "Логин или Email",
+    "loginPlaceholder": "Введите логин или email",
+    "password": "Пароль",
+    "confirmPassword": "Подтвердите пароль",
+    "username": "Имя пользователя",
+    "email": "Email",
+    "displayName": "Отображаемое имя",
+    "displayNamePlaceholder": "Как вас будут видеть другие",
+    "rememberMe": "Запомнить меня на 30 дней",
+    "loginSuccess": "С возвращением!",
+    "welcomeBack": "Вы успешно вошли в систему",
+    "registerSuccess": "Добро пожаловать!",
+    "welcomeNew": "Ваш аккаунт создан",
+    "error": "Ошибка",
+    "loginError": "Неверные данные для входа",
+    "registerError": "Ошибка регистрации"
+  },
+  "profile": {
+    "myProfile": "Мой профиль",
+    "editProfile": "Редактировать профиль",
+    "settings": "Настройки",
+    "bio": "О себе",
+    "memberSince": "Участник с",
+    "noUser": "Пользователь не найден",
+    "signInPrompt": "Войдите, чтобы просмотреть свой профиль",
+    "changePassword": "Сменить пароль",
+    "currentPassword": "Текущий пароль",
+    "newPassword": "Новый пароль",
+    "passwordChanged": "Пароль успешно изменён",
+    "profileUpdated": "Профиль обновлён",
+    "logoutAll": "Выйти со всех устройств"
   }
 }

@@ -1,0 +1,58 @@
+---
+description: Tailwind CSS and UI component best practices for the Dataset Canvas application
+globs: "**/*.css,tailwind.config.ts,tailwind.config.js,**/*.scss,**/*.tsx,**/*.jsx"
+---
+
+# Tailwind CSS Best Practices
+
+## Component Styling
+- Use utility classes over custom CSS.
+- Group related utilities with `@apply` only when necessary for readability (e.g., for complex button styles).
+- Use CSS Modules or other scoping mechanisms for complex component styles that cannot be achieved with utilities alone.
+- Use responsive design utilities (e.g., `md:`, `lg:`) for creating adaptive layouts.
+- Use state variants (e.g., `hover:`, `focus:`, `disabled:`) for interactive elements.
+- Keep component styles consistent across the application.
+
+## Layout
+- Use Flexbox (`flex`, `items-center`, `justify-between`) and Grid (`grid`, `grid-cols-*`) utilities for layouts.
+- Use container queries when needed for component-level responsive design.
+- Define and use consistent spacing from your theme for padding, margins, and gaps.
+- Use alignment utilities (`text-center`, `items-start`, etc.) for positioning content.
+
+## Typography
+- Define a clear typography scale in your `tailwind.config.ts`.
+- Use font size utilities (e.g., `text-sm`, `text-lg`).
+- Use line height (`leading-*`) and font weight (`font-bold`) utilities consistently.
+- Use text alignment and decoration utilities as needed.
+
+## Colors
+- Define a consistent color palette in your `tailwind.config.ts`, including primary, secondary, and neutral colors.
+- Use semantic color names in your config (e.g., `primary`, `destructive`) to ensure consistency and easier theming (like dark mode).
+- Ensure proper color contrast for accessibility.
+- Use opacity utilities (`opacity-50`) effectively.
+- Use gradient utilities for smooth color transitions.
+- Define colors for interactive states like `hover`.
+
+## Components
+- Use pre-built, accessible components (like those from shadcn/ui) as a base.
+- Compose components to build complex UIs.
+- Keep component variants consistent.
+- Use transition and animation utilities for smooth and meaningful motion.
+- Always keep accessibility in mind when creating or styling components.
+
+## Responsive Design
+- Use a mobile-first approach: design for small screens first, then add breakpoints for larger screens.
+- Use container queries effectively for components that need to adapt to their container's size.
+- Ensure typography and spacing are responsive.
+
+## Performance
+- Configure the `content` property in `tailwind.config.ts` correctly to purge unused CSS in production builds.
+- Minimize custom CSS and prefer utility classes.
+- Monitor production bundle size.
+
+## Best Practices
+- Follow consistent naming conventions.
+- Keep styles organized.
+- Document custom configurations or complex styles.
+- Follow accessibility guidelines (WCAG).
+- Use version control.

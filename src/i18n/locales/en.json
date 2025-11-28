@@ -47,5 +47,41 @@
     "loading": "Loading...",
     "error": "An error occurred",
     "noResults": "No results found"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "loginOrEmail": "Username or Email",
+    "loginPlaceholder": "Enter username or email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "username": "Username",
+    "email": "Email",
+    "displayName": "Display Name",
+    "displayNamePlaceholder": "How others will see you",
+    "rememberMe": "Remember me for 30 days",
+    "loginSuccess": "Welcome back!",
+    "welcomeBack": "You have successfully signed in",
+    "registerSuccess": "Welcome!",
+    "welcomeNew": "Your account has been created",
+    "error": "Error",
+    "loginError": "Invalid credentials",
+    "registerError": "Registration failed"
+  },
+  "profile": {
+    "myProfile": "My Profile",
+    "editProfile": "Edit Profile",
+    "settings": "Settings",
+    "bio": "Bio",
+    "memberSince": "Member since",
+    "noUser": "User not found",
+    "signInPrompt": "Sign in to view your profile",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "passwordChanged": "Password changed successfully",
+    "profileUpdated": "Profile updated successfully",
+    "logoutAll": "Sign out from all devices"
   }
 }

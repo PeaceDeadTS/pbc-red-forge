@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import type { SignOptions } from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 import { z } from 'zod';
 import { pool } from '../config/database.js';
@@ -225,7 +226,16 @@ router.get('/me', authMiddleware, async (req: AuthRequest, res: Response): Promi
 });
 
 // Вспомогательная функция для парсинга времени жизни токена
-function parseExpiration(exp: string): number {
+function parseExpiration(exp: SignOptions['expiresIn']): number {
+  // Если указано числом (секунды) — конвертируем в миллисекунды
+  if (typeof exp === 'number') {
+    return exp * 1000;
+  }
+
+  if (typeof exp !== 'string') {
+    return 24 * 60 * 60 * 1000; // default 1 day
+  }
+
   const match = exp.match(/^(\d+)([dhms])$/);
   if (!match) return 24 * 60 * 60 * 1000; // default 1 day
 

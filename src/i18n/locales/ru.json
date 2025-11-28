@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "home": "Главная",
+    "browse": "Обзор",
+    "generate": "Генерация",
+    "profile": "Профиль",
+    "signIn": "Войти"
+  },
+  "hero": {
+    "title": "Откройте и Создайте",
+    "subtitle": "Исследуйте тысячи моделей ИИ, создавайте потрясающий контент и делитесь своими творениями с сообществом",
+    "ctaExplore": "Обзор Моделей",
+    "ctaGenerate": "Начать Генерацию"
+  },
+  "browse": {
+    "title": "Обзор Моделей",
+    "search": "Поиск моделей, тегов, авторов...",
+    "filters": {
+      "all": "Все",
+      "checkpoint": "Чекпоинт",
+      "lora": "LoRA",
+      "textualInversion": "Текстовая Инверсия",
+      "hypernetwork": "Гиперсеть",
+      "aestheticGradient": "Эстетический Градиент",
+      "controlnet": "ControlNet",
+      "poses": "Позы"
+    },
+    "sortBy": "Сортировка",
+    "newest": "Новейшие",
+    "popular": "Популярные",
+    "rating": "Высокий Рейтинг",
+    "downloads": "Загрузки"
+  },
+  "model": {
+    "versions": "Версии",
+    "downloads": "Загрузки",
+    "likes": "Лайки",
+    "tags": "Теги",
+    "creator": "Автор",
+    "description": "Описание",
+    "examples": "Примеры",
+    "download": "Скачать",
+    "generate": "Генерировать",
+    "version": "Версия"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "noResults": "Результаты не найдены"
+  }
+}

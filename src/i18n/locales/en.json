@@ -1,0 +1,51 @@
+{
+  "nav": {
+    "home": "Home",
+    "browse": "Browse",
+    "generate": "Generate",
+    "profile": "Profile",
+    "signIn": "Sign In"
+  },
+  "hero": {
+    "title": "Discover & Create",
+    "subtitle": "Explore thousands of AI models, generate stunning content, and share your creations with the community",
+    "ctaExplore": "Explore Models",
+    "ctaGenerate": "Start Generating"
+  },
+  "browse": {
+    "title": "Browse Models",
+    "search": "Search models, tags, creators...",
+    "filters": {
+      "all": "All",
+      "checkpoint": "Checkpoint",
+      "lora": "LoRA",
+      "textualInversion": "Textual Inversion",
+      "hypernetwork": "Hypernetwork",
+      "aestheticGradient": "Aesthetic Gradient",
+      "controlnet": "ControlNet",
+      "poses": "Poses"
+    },
+    "sortBy": "Sort by",
+    "newest": "Newest",
+    "popular": "Most Popular",
+    "rating": "Highest Rated",
+    "downloads": "Most Downloaded"
+  },
+  "model": {
+    "versions": "Versions",
+    "downloads": "Downloads",
+    "likes": "Likes",
+    "tags": "Tags",
+    "creator": "Creator",
+    "description": "Description",
+    "examples": "Examples",
+    "download": "Download",
+    "generate": "Generate",
+    "version": "Version"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noResults": "No results found"
+  }
+}

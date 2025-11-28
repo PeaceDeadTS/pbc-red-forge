@@ -1,70 +1,70 @@
 # PROJECT CONSTITUTION
+ 
+## 1. General Information
+ 
+- **Project**: pbc-red-forge
+- **Purpose**: frontend single-page application (SPA) based on Vite + React + TypeScript + shadcn/ui.
+- **Production build output**: `dist` directory in the project root.
 
-## 1. Общая информация
+## 2. Technology Stack
 
-- **Проект**: pbc-red-forge
-- **Назначение**: фронтенд-приложение (SPA) на базе Vite + React + TypeScript + shadcn/ui.
-- **Продакшн-сборка**: каталог `dist` в корне проекта.
+- **Bundler**: Vite
+- **Language**: TypeScript
+- **UI library**: React
+- **Components**: shadcn/ui, Radix UI
+- **Styling**: Tailwind CSS, PostCSS, Autoprefixer
 
-## 2. Технологический стек
+## 3. Repository Structure (Baseline)
 
-- **Бандлер**: Vite
-- **Язык**: TypeScript
-- **UI-библиотека**: React
-- **Компоненты**: shadcn/ui, Radix UI
-- **Стили**: Tailwind CSS, PostCSS, Autoprefixer
+- `src/` — application source code (components, pages, routing, hooks, utilities).
+- `public/` — static assets.
+- `dist/` — production build output (created by `npm run build`).
+- `package.json` — scripts, dependencies, and project metadata.
+- `vite.config.*` — Vite configuration.
+- `tailwind.config.*` — Tailwind CSS configuration.
 
-## 3. Базовая структура репозитория
+## 4. Local Development
 
-- `src/` — исходный код приложения (компоненты, страницы, роутинг, хуки, утилиты).
-- `public/` — статические ресурсы.
-- `dist/` — результат продакшн-сборки (создаётся командой `npm run build`).
-- `package.json` — скрипты, зависимости и метаданные проекта.
-- `vite.config.*` — конфигурация Vite.
-- `tailwind.config.*` — конфигурация Tailwind CSS.
+All commands are executed from the project root directory `pbc-red-forge`.
 
-## 4. Локальная разработка
-
-Все команды выполняются из директории корня проекта `pbc-red-forge`.
-
-- **Установка зависимостей**:
+- **Install dependencies**:
   - `npm install`
 
-- **Запуск dev-сервера** (разработка):
+- **Run dev server** (development):
   - `npm run dev`
 
-- **Сборка продакшн-билда**:
+- **Build production bundle**:
   - `npm run build`
 
-- **Локальный просмотр продакшн-сборки**:
+- **Preview production build locally**:
   - `npm run preview`
 
-## 5. Git-рабочий процесс
+## 5. Git Workflow
 
-Локальный рабочий цикл перед отправкой изменений в удалённый репозиторий:
+Local workflow before pushing changes to the remote repository:
 
-1. Проверить статус репозитория:
+1. Check repository status:
    - `git status`
-2. Добавить все изменённые файлы:
+2. Add all modified files:
    - `git add .`
-3. Зафиксировать изменения с сообщением:
+3. Commit changes with a message:
    - `git commit -m "feat: new implement"`
-4. Отправить изменения в удалённый репозиторий (ветка `main`):
+4. Push changes to the remote repository (branch `main`):
    - `git push`
 
-## 6. Обновление и сборка на сервере
+## 6. Server Update and Build
 
-На сервере развёртывания проект расположен в директории:
+On the deployment server the project is located at:
 
 - `/mnt/d/pbc.red/public_html/pbc-red-forge`
 
-Команда для обновления кода и пересборки проекта на сервере выполняется из любой директории:
+The command for updating the code and rebuilding the project on the server can be executed from any directory:
 
 - `cd /mnt/d/pbc.red/public_html/pbc-red-forge && git pull origin main && npm install && npm run build`
 
-Этот шаг:
+This command:
 
-1. Переходит в директорию проекта.
-2. Подтягивает последние изменения из ветки `main` удалённого репозитория.
-3. Обновляет зависимости.
-4. Собирает продакшн-билд в каталог `dist`.
+1. Changes directory to the project root.
+2. Pulls the latest changes from the `main` branch of the remote repository.
+3. Updates dependencies.
+4. Builds the production bundle into the `dist` directory.

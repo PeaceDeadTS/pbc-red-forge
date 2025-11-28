@@ -82,6 +82,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           id="username"
           type="text"
           placeholder="username"
+          autoComplete="username"
           {...register('username')}
           className="bg-background"
         />

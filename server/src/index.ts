@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import { testConnection } from './config/database.js';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
@@ -9,6 +10,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+const SOCKET_PATH = process.env.API_SOCKET_PATH;
 
 // Middleware
 app.use(cors({
@@ -35,6 +37,21 @@ const start = async () => {
   if (!dbConnected) {
     console.error('❌ Не удалось подключиться к базе данных. Сервер не запущен.');
     process.exit(1);
+  }
+
+  if (SOCKET_PATH) {
+    if (fs.existsSync(SOCKET_PATH)) {
+      fs.unlinkSync(SOCKET_PATH);
+    }
+
+    const server = app.listen(SOCKET_PATH, () => {
+      console.log(`🚀 API сервер запущен на Unix-сокете ${SOCKET_PATH}`);
+    });
+
+    // Обеспечиваем права доступа к сокету для nginx (www-data)
+    fs.chmodSync(SOCKET_PATH, 0o660);
+
+    return server;
   }
 
   app.listen(PORT, () => {

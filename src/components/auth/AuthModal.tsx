@@ -21,7 +21,7 @@ export const AuthModal = ({ open, onOpenChange, defaultTab = 'login' }: AuthModa
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] bg-card border-border">
+      <DialogContent className="sm:max-w-[425px] bg-card border-border" aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className="text-center text-2xl font-display">
             {activeTab === 'login' ? t('auth.signIn') : t('auth.signUp')}

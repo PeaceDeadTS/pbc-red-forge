@@ -121,6 +121,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           id="password"
           type="password"
           placeholder="••••••••"
+          autoComplete="new-password"
           {...register('password')}
           className="bg-background"
         />
@@ -135,6 +136,7 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
           id="confirmPassword"
           type="password"
           placeholder="••••••••"
+          autoComplete="new-password"
           {...register('confirmPassword')}
           className="bg-background"
         />

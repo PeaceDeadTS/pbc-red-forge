@@ -76,6 +76,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           id="login"
           type="text"
           placeholder={t('auth.loginPlaceholder')}
+          autoComplete="username"
           {...register('login')}
           className="bg-background"
         />
@@ -90,6 +91,7 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
           id="password"
           type="password"
           placeholder="••••••••"
+          autoComplete="current-password"
           {...register('password')}
           className="bg-background"
         />

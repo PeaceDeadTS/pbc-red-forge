@@ -39,29 +39,6 @@ All commands are executed from the project root directory `pbc-red-forge`.
 - **Preview production build locally**:
   - `npm run preview`
 
-## 5. Git Workflow
-
-Local workflow before pushing changes to the remote repository:
-
-1. Check repository status:
-   - `git status`
-2. Add all modified files:
-   - `git add .`
-3. Commit changes with a message:
-   - `git commit -m "feat: new implement"`
-4. Push changes to the remote repository (branch `main`):
-   - `git push`
-
-## 6. Server Update and Build
-
-On the deployment server the project is located at:
-
-- `/mnt/d/pbc.red/public_html/pbc-red-forge`
-
-The command for updating the code and rebuilding the project on the server can be executed from any directory:
-
-- `cd /mnt/d/pbc.red/public_html/pbc-red-forge && git pull origin main && npm install && npm run build`
-
 This command:
 
 1. Changes directory to the project root.

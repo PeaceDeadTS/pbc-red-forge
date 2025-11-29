@@ -1,73 +1,248 @@
-# Welcome to your Lovable project
+# PBC RED Platform – pbc-red-forge
 
-## Project info
+Web platform for discovering, browsing and managing AI models.
 
-**URL**: https://lovable.dev/projects/625926e8-3be2-4bfe-8c50-80bce4ad8a5c
+This repository contains:
 
-## How can I edit this code?
+- Frontend SPA in the project root (Vite + React + TypeScript + shadcn/ui).
+- Backend API in `server/` (Node.js + Express + MariaDB/MySQL).
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/625926e8-3be2-4bfe-8c50-80bce4ad8a5c) and start prompting.
+- **Model catalog** – browse models with search and filtering.
+- **Model details** – view rich metadata, stats and tabs per model.
+- **(Planned)** Model generation UI at `/generate`.
+- **Authentication** – registration, login, logout, "remember me".
+- **User profiles** – editable display name and bio, profile pages.
+- **Users directory** – `/users` page with list of users, groups and links to profiles.
+- **User groups & rights** – MediaWiki-style groups (administrator, creator, user) and rights.
+- **i18n** – 5 languages: English, French, German, Russian, Spanish.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## Tech stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Frontend
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Framework**: React 18, Vite 5, TypeScript.
+- **UI**: shadcn/ui, Radix UI primitives, Tailwind CSS, custom gradients/animations.
+- **Routing**: `react-router-dom` with lazy-loaded pages.
+- **State / data**: `@tanstack/react-query`, React context for auth.
+- **HTTP**: shared `axios` instance with auth token interceptor.
+- **i18n**: `i18next` + `react-i18next`, locale files in `src/i18n/locales/`.
+- **UX**: Sonner toasts, Radix tooltips, `framer-motion` animations.
 
-Follow these steps:
+### Backend
+
+- **Runtime**: Node.js (TypeScript).
+- **Framework**: Express 4.
+- **Database**: MariaDB/MySQL via `mysql2/promise`.
+- **Auth**: `bcrypt` + `jsonwebtoken` with session table.
+- **Validation**: `zod` for request schemas.
+
+---
+
+## Repository structure
+
+- `/` – frontend SPA (this project root).
+- `/src` – React application (components, pages, routing, hooks, utilities).
+- `/public` – static assets.
+- `/dist` – frontend production build (created by `npm run build`).
+- `/server` – backend API (Express + MySQL/MariaDB).
+- `/server/src` – backend source code.
+- `/server/.env.example` – example backend environment configuration.
+
+Key frontend entry points:
+
+- `src/main.tsx` – mounts `<App />` and imports global styles.
+- `src/App.tsx` – routing, providers (`QueryClientProvider`, `AuthProvider`, etc.).
+
+Key routes:
+
+- `/` – Home.
+- `/browse` – models catalog.
+- `/model/:id` – model detail page.
+- `/generate` – planned generation UI.
+- `/profile` and `/profile/:id` – user profile pages.
+- `/users` – users directory.
+
+---
+
+## Prerequisites
+
+- Node.js LTS + npm.
+- MariaDB or MySQL instance.
+
+---
+
+## Setup & installation
+
+Clone the repository and install dependencies for frontend and backend:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
+cd pbc-red-forge
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Frontend dependencies
+npm install
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Backend dependencies
+cd server
+npm install
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+---
+
+## Backend configuration
+
+1. Go to `server/` and create `.env` from example:
+
+   ```sh
+   cd server
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and set:
+
+   - `DB_NAME`, `DB_USER`, `DB_PASSWORD` – database credentials.
+   - Either `DB_SOCKET_PATH` **or** `DB_HOST` / `DB_PORT`.
+   - `JWT_SECRET` – generate a strong secret for production.
+   - `JWT_EXPIRES_IN`, `JWT_REMEMBER_EXPIRES_IN` – token lifetimes.
+   - `PORT` – API port (default `3001`).
+   - `FRONTEND_URL` – frontend origin for CORS (e.g. `http://localhost:5173`).
+
+3. Initialize database schema:
+
+   ```sh
+   cd server
+   npm run db:init
+   ```
+
+---
+
+## Running locally
+
+### 1. Start backend (API)
+
+From `server/` directory:
+
+```sh
+cd server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+By default API will be available on `http://localhost:3001`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### 2. Start frontend (SPA)
 
-**Use GitHub Codespaces**
+From project root `pbc-red-forge`:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```sh
+npm run dev
+```
 
-## What technologies are used for this project?
+Vite dev server runs on `http://localhost:5173`.
 
-This project is built with:
+The frontend uses a shared `axios` instance with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- `baseURL = VITE_API_URL + '/api'` if `VITE_API_URL` is set.
+- Fallback to `http://localhost:3001/api` in development.
 
-## How can I deploy this project?
+Make sure `VITE_API_URL` in your frontend `.env` (if used) points to the API origin.
 
-Simply open [Lovable](https://lovable.dev/projects/625926e8-3be2-4bfe-8c50-80bce4ad8a5c) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## Build & production
 
-Yes, you can!
+### Frontend
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+- Production build:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+  ```sh
+  npm run build
+  ```
+
+  Output is written to `dist/` in project root.
+
+- Local preview of production build:
+
+  ```sh
+  npm run preview
+  ```
+
+Typical deployment:
+
+- Build on the server (or CI) with `npm run build`.
+- Serve static files from `dist/` via nginx or another HTTP server.
+- Configure `VITE_API_URL` to the public backend origin (e.g. `https://pbc.red`).
+
+### Backend
+
+From `server/` directory:
+
+```sh
+cd server
+npm run build
+npm start
+```
+
+This runs `dist/index.js` using Node.js.
+
+Deployment notes (current assumptions):
+
+- API is typically run as a long-lived process (e.g. `systemd` service).
+- Preferred setup: listen on Unix socket from `API_SOCKET_PATH` (e.g. `/run/pbc-red-api/api.sock`) and proxy via nginx:
+
+  ```nginx
+  location /api/ {
+      proxy_pass http://unix:/run/pbc-red-api/api.sock:;
+  }
+  ```
+
+---
+
+## API overview (high level)
+
+Auth (`/api/auth`):
+
+- `POST /api/auth/register` – register new user.
+- `POST /api/auth/login` – login with username/email and password.
+- `POST /api/auth/logout` – logout from current session.
+- `POST /api/auth/logout-all` – logout from all sessions.
+- `GET /api/auth/me` – get current authenticated user.
+
+Users (`/api/users`):
+
+- `GET /api/users/:id` – public profile, with `isOwner` flag and email for self.
+- `PATCH /api/users/me` – update own profile (display name, bio, avatar URL).
+- `POST /api/users/me/change-password` – change own password.
+- `GET /api/users` – paginated list of users with groups, sorting.
+- `GET /api/users/groups/list` – list of available groups.
+- `PATCH /api/users/:id/groups` – change user groups (admin only).
+
+---
+
+## Internationalization
+
+The frontend uses `i18next` and `react-i18next` with language files in `src/i18n/locales/`.
+
+Supported languages:
+
+- English (`en`)
+- French (`fr`)
+- German (`de`)
+- Russian (`ru`)
+- Spanish (`es`)
+
+Language can be switched via the `LanguageSelector` component in the navigation bar.
+
+---
+
+## Development notes
+
+- Linting: `npm run lint` (frontend root).
+- Build (development mode): `npm run build:dev`.
+- All new UI strings should use i18n keys instead of hardcoded text.
+

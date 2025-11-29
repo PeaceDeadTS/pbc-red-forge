@@ -11,7 +11,7 @@ import {
 const router = Router();
 
 /**
- * GET /api/users
+ * GET /api/v1/users
  * Get list of all users (public endpoint)
  */
 router.get('/', optionalAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -33,7 +33,7 @@ router.get('/', optionalAuthMiddleware, async (req: AuthRequest, res: Response):
 });
 
 /**
- * GET /api/users/groups/list
+ * GET /api/v1/users/groups/list
  * Get all available groups
  */
 router.get('/groups/list', async (_req, res: Response): Promise<void> => {
@@ -47,7 +47,7 @@ router.get('/groups/list', async (_req, res: Response): Promise<void> => {
 });
 
 /**
- * GET /api/users/:id
+ * GET /api/v1/users/:id
  * Get user profile by ID
  */
 router.get('/:id', optionalAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -66,7 +66,7 @@ router.get('/:id', optionalAuthMiddleware, async (req: AuthRequest, res: Respons
 });
 
 /**
- * PATCH /api/users/me
+ * PATCH /api/v1/users/me
  * Update own profile
  */
 router.patch('/me', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -94,7 +94,7 @@ router.patch('/me', authMiddleware, async (req: AuthRequest, res: Response): Pro
 });
 
 /**
- * POST /api/users/me/change-password
+ * POST /api/v1/users/me/change-password
  * Change own password
  */
 router.post('/me/change-password', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -122,7 +122,7 @@ router.post('/me/change-password', authMiddleware, async (req: AuthRequest, res:
 });
 
 /**
- * PATCH /api/users/:id/groups
+ * PATCH /api/v1/users/:id/groups
  * Update user groups (admin only)
  */
 router.patch('/:id/groups', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {

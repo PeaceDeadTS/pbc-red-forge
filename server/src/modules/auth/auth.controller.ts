@@ -7,7 +7,7 @@ import { registerSchema, loginSchema } from './auth.types.js';
 const router = Router();
 
 /**
- * POST /api/auth/register
+ * POST /api/v1/auth/register
  * Register new user
  */
 router.post('/register', async (req: Request, res: Response): Promise<void> => {
@@ -38,7 +38,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
 });
 
 /**
- * POST /api/auth/login
+ * POST /api/v1/auth/login
  * Login user
  */
 router.post('/login', async (req: Request, res: Response): Promise<void> => {
@@ -69,7 +69,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 });
 
 /**
- * POST /api/auth/logout
+ * POST /api/v1/auth/logout
  * Logout current session
  */
 router.post('/logout', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -88,7 +88,7 @@ router.post('/logout', authMiddleware, async (req: AuthRequest, res: Response): 
 });
 
 /**
- * POST /api/auth/logout-all
+ * POST /api/v1/auth/logout-all
  * Logout from all devices
  */
 router.post('/logout-all', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -107,7 +107,7 @@ router.post('/logout-all', authMiddleware, async (req: AuthRequest, res: Respons
 });
 
 /**
- * GET /api/auth/me
+ * GET /api/v1/auth/me
  * Get current user data
  */
 router.get('/me', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {

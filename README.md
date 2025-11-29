@@ -147,8 +147,8 @@ Vite dev server runs on `http://localhost:5173`.
 
 The frontend uses a shared `axios` instance with:
 
-- `baseURL = VITE_API_URL + '/api'` if `VITE_API_URL` is set.
-- Fallback to `http://localhost:3001/api` in development.
+- `baseURL = VITE_API_URL + '/api/v1'` if `VITE_API_URL` is set.
+- Fallback to `http://localhost:3001/api/v1` in development.
 
 Make sure `VITE_API_URL` in your frontend `.env` (if used) points to the API origin.
 
@@ -196,7 +196,7 @@ Deployment notes (current assumptions):
 - Preferred setup: listen on Unix socket from `API_SOCKET_PATH` (e.g. `/run/pbc-red-api/api.sock`) and proxy via nginx:
 
   ```nginx
-  location /api/ {
+  location /api/v1/ {
       proxy_pass http://unix:/run/pbc-red-api/api.sock:;
   }
   ```
@@ -205,22 +205,22 @@ Deployment notes (current assumptions):
 
 ## API overview (high level)
 
-Auth (`/api/auth`):
+Auth (`/api/v1/auth`):
 
-- `POST /api/auth/register` – register new user.
-- `POST /api/auth/login` – login with username/email and password.
-- `POST /api/auth/logout` – logout from current session.
-- `POST /api/auth/logout-all` – logout from all sessions.
-- `GET /api/auth/me` – get current authenticated user.
+- `POST /api/v1/auth/register` – register new user.
+- `POST /api/v1/auth/login` – login with username/email and password.
+- `POST /api/v1/auth/logout` – logout from current session.
+- `POST /api/v1/auth/logout-all` – logout from all sessions.
+- `GET /api/v1/auth/me` – get current authenticated user.
 
-Users (`/api/users`):
+Users (`/api/v1/users`):
 
-- `GET /api/users/:id` – public profile, with `isOwner` flag and email for self.
-- `PATCH /api/users/me` – update own profile (display name, bio, avatar URL).
-- `POST /api/users/me/change-password` – change own password.
-- `GET /api/users` – paginated list of users with groups, sorting.
-- `GET /api/users/groups/list` – list of available groups.
-- `PATCH /api/users/:id/groups` – change user groups (admin only).
+- `GET /api/v1/users/:id` – public profile, with `isOwner` flag and email for self.
+- `PATCH /api/v1/users/me` – update own profile (display name, bio, avatar URL).
+- `POST /api/v1/users/me/change-password` – change own password.
+- `GET /api/v1/users` – paginated list of users with groups, sorting.
+- `GET /api/v1/users/groups/list` – list of available groups.
+- `PATCH /api/v1/users/:id/groups` – change user groups (admin only).
 
 ---
 

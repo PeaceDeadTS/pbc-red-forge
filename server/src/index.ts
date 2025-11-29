@@ -28,12 +28,12 @@ app.use(express.json());
 app.set('trust proxy', 1);
 
 // Routes - Feature modules
-app.use('/api/auth', authRoutes);
-app.use('/api/users', usersRoutes);
-app.use('/api/generation', generationRoutes);
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/generation', generationRoutes);
 
 // Health check
-app.get('/api/health', (_, res) => {
+app.get('/api/v1/health', (_, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 

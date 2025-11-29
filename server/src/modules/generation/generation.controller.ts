@@ -7,7 +7,7 @@ import { createGenerationJobSchema } from './generation.types.js';
 const router = Router();
 
 /**
- * GET /api/generation/status
+ * GET /api/v1/generation/status
  * Get generation service status
  */
 router.get('/status', async (_req, res: Response): Promise<void> => {
@@ -21,7 +21,7 @@ router.get('/status', async (_req, res: Response): Promise<void> => {
 });
 
 /**
- * POST /api/generation/jobs
+ * POST /api/v1/generation/jobs
  * Create a new generation job
  */
 router.post('/jobs', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -49,7 +49,7 @@ router.post('/jobs', authMiddleware, async (req: AuthRequest, res: Response): Pr
 });
 
 /**
- * GET /api/generation/jobs
+ * GET /api/v1/generation/jobs
  * Get user's generation jobs
  */
 router.get('/jobs', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -76,7 +76,7 @@ router.get('/jobs', authMiddleware, async (req: AuthRequest, res: Response): Pro
 });
 
 /**
- * GET /api/generation/jobs/:id
+ * GET /api/v1/generation/jobs/:id
  * Get specific generation job
  */
 router.get('/jobs/:id', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -100,7 +100,7 @@ router.get('/jobs/:id', authMiddleware, async (req: AuthRequest, res: Response):
 });
 
 /**
- * DELETE /api/generation/jobs/:id
+ * DELETE /api/v1/generation/jobs/:id
  * Cancel a pending generation job
  */
 router.delete('/jobs/:id', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {

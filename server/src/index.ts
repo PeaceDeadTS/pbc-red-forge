@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import { testConnection } from './config/database.js';
+import { ensureSchema } from './db/schema.js';
 import authRoutes from './routes/auth.js';
 import usersRoutes from './routes/users.js';
 
@@ -36,6 +37,14 @@ const start = async () => {
   const dbConnected = await testConnection();
   if (!dbConnected) {
     console.error('❌ Не удалось подключиться к базе данных. Сервер не запущен.');
+    process.exit(1);
+  }
+
+  try {
+    await ensureSchema();
+    console.log('✅ Схема базы данных проверена/инициализирована');
+  } catch (error) {
+    console.error('❌ Ошибка инициализации схемы БД:', error);
     process.exit(1);
   }
 

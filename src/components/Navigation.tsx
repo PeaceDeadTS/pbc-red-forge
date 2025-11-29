@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, LogOut, Users } from 'lucide-react';
+import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, LogOut, Users, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -106,6 +106,17 @@ export const Navigation = () => {
                       {t('nav.profile')}
                     </Link>
                   </DropdownMenuItem>
+                  {user?.groups?.includes('administrator') && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="cursor-pointer text-red-400 hover:text-red-300">
+                          <Shield className="mr-2 h-4 w-4" />
+                          {t('nav.admin')}
+                        </Link>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => logout()} className="cursor-pointer text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />

@@ -7,6 +7,7 @@ export interface User {
   bio: string | null;
   created_at?: string;
   groups?: string[];
+  status?: 'active' | 'banned';
 }
 
 export interface UserGroup {

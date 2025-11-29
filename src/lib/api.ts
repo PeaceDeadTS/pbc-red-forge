@@ -67,3 +67,40 @@ export const usersApi = {
   updateUserGroups: (userId: string, groups: string[]) =>
     api.patch(`/users/${userId}/groups`, { groups }),
 };
+
+// Admin API
+export const adminApi = {
+  // Update user status (ban/unban)
+  updateUserStatus: (userId: string, status: string) =>
+    api.patch(`/admin/users/${userId}/status`, { status }),
+
+  // Get system stats
+  getSystemStats: () => api.get('/admin/stats'),
+
+  // Get site settings
+  getSettings: () => api.get('/admin/settings'),
+
+  // Update site settings
+  updateSettings: (settings: Record<string, unknown>) =>
+    api.patch('/admin/settings', settings),
+
+  // Content moderation
+  getContentQueue: (params?: { type?: string; status?: string; limit?: number; offset?: number }) =>
+    api.get('/admin/content/queue', { params }),
+
+  // Approve content
+  approveContent: (contentId: string, contentType: string) =>
+    api.post(`/admin/content/${contentType}/${contentId}/approve`),
+
+  // Reject content
+  rejectContent: (contentId: string, contentType: string, reason?: string) =>
+    api.post(`/admin/content/${contentType}/${contentId}/reject`, { reason }),
+
+  // Get reports
+  getReports: (params?: { status?: string; limit?: number; offset?: number }) =>
+    api.get('/admin/reports', { params }),
+
+  // Resolve report
+  resolveReport: (reportId: string, action: string, notes?: string) =>
+    api.post(`/admin/reports/${reportId}/resolve`, { action, notes }),
+};

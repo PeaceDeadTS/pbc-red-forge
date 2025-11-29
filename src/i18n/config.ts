@@ -18,6 +18,8 @@ export const SUPPORTED_LANGUAGES = [
 
 export type LanguageCode = (typeof SUPPORTED_LANGUAGES)[number]['code'];
 
+const SUPPORTED_CODES = SUPPORTED_LANGUAGES.map((lang) => lang.code);
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -30,10 +32,18 @@ i18n
       ru: { translation: ru },
     },
     fallbackLng: 'en',
-    supportedLngs: SUPPORTED_LANGUAGES.map((lang) => lang.code),
+    supportedLngs: SUPPORTED_CODES,
+    // Handle language codes like 'en-US' -> 'en'
+    load: 'languageOnly',
     detection: {
+      // Priority: 1) user's saved preference, 2) browser language, 3) html lang attribute
       order: ['localStorage', 'navigator', 'htmlTag'],
+      // Save user's language choice to localStorage
       caches: ['localStorage'],
+      // Key name in localStorage
+      lookupLocalStorage: 'i18nextLng',
+      // Check these navigator properties for browser language
+      lookupFromNavigatorLanguage: true,
     },
     interpolation: {
       escapeValue: false,

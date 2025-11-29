@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local development status document (do not commit)
+DEV_STATUS.md

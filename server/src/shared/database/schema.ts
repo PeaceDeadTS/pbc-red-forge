@@ -13,6 +13,10 @@ const DEFAULT_GROUPS = [
     name: 'creator',
     display_name: 'Creator',
     rights: [
+      'read_content',
+      'comment',
+      'like',
+      'edit_own_profile',
       'create_content',
       'edit_own_content',
       'delete_own_content',

@@ -52,8 +52,6 @@ export const authService = {
     // Assign user to groups
     if (isFirstUser) {
       await this.assignToGroup(userId, 'administrator');
-      await this.assignToGroup(userId, 'creator');
-      await this.assignToGroup(userId, 'user');
     } else {
       await this.assignToGroup(userId, 'user');
     }

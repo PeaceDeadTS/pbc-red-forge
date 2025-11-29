@@ -13,7 +13,7 @@ export const changePasswordSchema = z.object({
 });
 
 export const updateUserGroupsSchema = z.object({
-  groups: z.array(z.string()),
+  groups: z.array(z.string()).min(1).max(1),
 });
 
 // Types inferred from schemas

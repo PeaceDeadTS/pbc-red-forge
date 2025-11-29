@@ -147,6 +147,18 @@ export const usersRepository = {
     return rows.map((r: RowDataPacket) => r.name as string);
   },
 
+  async getUserRights(userId: string): Promise<string[]> {
+    const [rows] = await pool.execute<RowDataPacket[]>(
+      `SELECT DISTINCT ur.name
+       FROM user_rights ur
+       JOIN user_group_rights ugr ON ur.id = ugr.right_id
+       JOIN user_group_membership ugm ON ugm.group_id = ugr.group_id
+       WHERE ugm.user_id = ?`,
+      [userId]
+    );
+    return rows.map((r: RowDataPacket) => r.name as string);
+  },
+
   /**
    * Get all available groups
    */

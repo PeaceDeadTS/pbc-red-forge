@@ -180,19 +180,31 @@ export const usersService = {
       throw new UsersError('User not found', 404);
     }
 
-    // Get valid group IDs
-    const validGroups = await usersRepository.getGroupsByNames(groups);
+    if (groups.length === 0) {
+      throw new UsersError('User must belong to at least one group', 400);
+    }
+
+    const uniqueGroups = Array.from(new Set(groups));
+    if (uniqueGroups.length !== 1) {
+      throw new UsersError('User can belong to only one group', 400);
+    }
+
+    if (targetUserId === adminId) {
+      throw new UsersError('Administrators cannot change their own groups', 400);
+    }
+
+    const targetGroup = uniqueGroups[0];
+
+    // Get valid group IDs for the target group
+    const validGroups = await usersRepository.getGroupsByNames([targetGroup]);
     const validGroupMap = new Map(validGroups.map((g) => [g.name, g.id]));
 
     // Remove all current group memberships
     await usersRepository.removeAllGroupMemberships(targetUserId);
 
-    // Add new group memberships
-    for (const groupName of groups) {
-      const groupId = validGroupMap.get(groupName);
-      if (groupId) {
-        await usersRepository.addUserToGroup(targetUserId, groupId, adminId);
-      }
+    const groupId = validGroupMap.get(targetGroup);
+    if (groupId) {
+      await usersRepository.addUserToGroup(targetUserId, groupId, adminId);
     }
 
     // Return updated groups
@@ -203,7 +215,7 @@ export const usersService = {
    * Check if user is administrator
    */
   async isAdmin(userId: string): Promise<boolean> {
-    const groups = await usersRepository.getUserGroups(userId);
-    return groups.includes('administrator');
+    const rights = await usersRepository.getUserRights(userId);
+    return rights.includes('*') || rights.includes('manage_users') || rights.includes('view_admin_panel');
   },
 };

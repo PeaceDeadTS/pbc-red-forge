@@ -21,11 +21,12 @@ import {
   Dialog, DialogContent, DialogDescription, DialogFooter, 
   DialogHeader, DialogTitle
 } from '@/components/ui/dialog';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { usersApi, adminApi } from '@/lib/api';
 import { User, UserGroup, UsersListResponse } from '@/types/auth';
+import { useAuth } from '@/contexts/AuthContext';
 
 const groupIcons: Record<string, React.ReactNode> = {
   administrator: <Crown className="h-3 w-3" />,
@@ -43,10 +44,11 @@ export const AdminUsersTab = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { user: currentUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [groupsDialogOpen, setGroupsDialogOpen] = useState(false);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [statusDialogOpen, setStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<'active' | 'banned'>('active');
 
@@ -116,7 +118,7 @@ export const AdminUsersTab = () => {
 
   const handleEditGroups = (user: User) => {
     setSelectedUser(user);
-    setSelectedGroups(user.groups || []);
+    setSelectedGroup(user.groups?.[0] || null);
     setGroupsDialogOpen(true);
   };
 
@@ -127,8 +129,8 @@ export const AdminUsersTab = () => {
   };
 
   const handleSaveGroups = () => {
-    if (selectedUser) {
-      updateGroupsMutation.mutate({ userId: selectedUser.id, groups: selectedGroups });
+    if (selectedUser && selectedGroup) {
+      updateGroupsMutation.mutate({ userId: selectedUser.id, groups: [selectedGroup] });
     }
   };
 
@@ -136,14 +138,6 @@ export const AdminUsersTab = () => {
     if (selectedUser) {
       updateStatusMutation.mutate({ userId: selectedUser.id, status: newStatus });
     }
-  };
-
-  const toggleGroup = (groupName: string) => {
-    setSelectedGroups(prev => 
-      prev.includes(groupName) 
-        ? prev.filter(g => g !== groupName)
-        : [...prev, groupName]
-    );
   };
 
   const filteredUsers = usersData?.users.filter(user => 
@@ -309,7 +303,10 @@ export const AdminUsersTab = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEditGroups(user)}>
+                            <DropdownMenuItem
+                              onClick={() => handleEditGroups(user)}
+                              disabled={user.id === currentUser?.id}
+                            >
                               <Shield className="mr-2 h-4 w-4" />
                               {t('admin.users.editGroups')}
                             </DropdownMenuItem>
@@ -348,30 +345,34 @@ export const AdminUsersTab = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            {groupsData?.groups.map((group) => (
-              <div key={group.name} className="flex items-center space-x-3">
-                <Checkbox
-                  id={group.name}
-                  checked={selectedGroups.includes(group.name)}
-                  onCheckedChange={() => toggleGroup(group.name)}
-                />
-                <Label htmlFor={group.name} className="flex items-center gap-2 cursor-pointer">
-                  <Badge variant="outline" className={groupColors[group.name] || ''}>
-                    {groupIcons[group.name]}
-                    <span className="ml-1">{group.display_name}</span>
-                  </Badge>
-                  {group.description && (
-                    <span className="text-sm text-muted-foreground">— {group.description}</span>
-                  )}
-                </Label>
-              </div>
-            ))}
+            <RadioGroup
+              value={selectedGroup || ''}
+              onValueChange={(value) => setSelectedGroup(value)}
+            >
+              {groupsData?.groups.map((group) => (
+                <div key={group.name} className="flex items-center space-x-3">
+                  <RadioGroupItem value={group.name} id={group.name} />
+                  <Label htmlFor={group.name} className="flex items-center gap-2 cursor-pointer">
+                    <Badge variant="outline" className={groupColors[group.name] || ''}>
+                      {groupIcons[group.name]}
+                      <span className="ml-1">{group.display_name}</span>
+                    </Badge>
+                    {group.description && (
+                      <span className="text-sm text-muted-foreground">— {group.description}</span>
+                    )}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setGroupsDialogOpen(false)}>
               {t('common.cancel')}
             </Button>
-            <Button onClick={handleSaveGroups} disabled={updateGroupsMutation.isPending}>
+            <Button
+              onClick={handleSaveGroups}
+              disabled={updateGroupsMutation.isPending || !selectedGroup}
+            >
               {t('common.save')}
             </Button>
           </DialogFooter>

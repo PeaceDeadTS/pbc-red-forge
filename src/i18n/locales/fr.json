@@ -3,6 +3,7 @@
     "home": "Accueil",
     "browse": "Parcourir",
     "generate": "Générer",
+    "users": "Utilisateurs",
     "profile": "Profil",
     "signIn": "Connexion"
   },
@@ -103,5 +104,25 @@
     "de": "Allemand",
     "es": "Espagnol",
     "fr": "Français"
+  },
+  "users": {
+    "title": "Utilisateurs",
+    "subtitle": "Parcourir tous les utilisateurs inscrits",
+    "sortBy": "Trier par",
+    "sortOptions": {
+      "date": "Date d'inscription",
+      "username": "Nom d'utilisateur",
+      "displayName": "Nom d'affichage"
+    },
+    "ascending": "Croissant",
+    "descending": "Décroissant",
+    "totalUsers": "{{count}} utilisateurs au total",
+    "noUsers": "Aucun utilisateur trouvé",
+    "memberSince": "Membre depuis",
+    "groups": {
+      "administrator": "Administrateur",
+      "creator": "Créateur",
+      "user": "Utilisateur"
+    }
   }
 }

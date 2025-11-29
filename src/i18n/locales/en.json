@@ -3,6 +3,7 @@
     "home": "Home",
     "browse": "Browse",
     "generate": "Generate",
+    "users": "Users",
     "profile": "Profile",
     "signIn": "Sign In"
   },
@@ -103,5 +104,25 @@
     "de": "German",
     "es": "Spanish",
     "fr": "French"
+  },
+  "users": {
+    "title": "Users",
+    "subtitle": "Browse all registered users",
+    "sortBy": "Sort by",
+    "sortOptions": {
+      "date": "Registration date",
+      "username": "Username",
+      "displayName": "Display name"
+    },
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "totalUsers": "{{count}} users total",
+    "noUsers": "No users found",
+    "memberSince": "Member since",
+    "groups": {
+      "administrator": "Administrator",
+      "creator": "Creator",
+      "user": "User"
+    }
   }
 }

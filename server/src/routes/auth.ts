@@ -26,6 +26,31 @@ const loginSchema = z.object({
   remember_me: z.boolean().optional().default(false),
 });
 
+// Helper: assign user to a group
+async function assignUserToGroup(userId: string, groupName: string, assignedBy?: string): Promise<void> {
+  const [groups] = await pool.execute<RowDataPacket[]>(
+    'SELECT id FROM user_groups WHERE name = ?',
+    [groupName]
+  );
+  if (groups.length > 0) {
+    await pool.execute(
+      'INSERT IGNORE INTO user_group_membership (user_id, group_id, assigned_by) VALUES (?, ?, ?)',
+      [userId, groups[0].id, assignedBy || null]
+    );
+  }
+}
+
+// Helper: get user groups
+async function getUserGroups(userId: string): Promise<string[]> {
+  const [rows] = await pool.execute<RowDataPacket[]>(
+    `SELECT ug.name FROM user_groups ug
+     JOIN user_group_membership ugm ON ug.id = ugm.group_id
+     WHERE ugm.user_id = ?`,
+    [userId]
+  );
+  return rows.map((r: RowDataPacket) => r.name as string);
+}
+
 // Регистрация
 router.post('/register', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -42,6 +67,12 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    // Check if this is the first user (will become administrator)
+    const [userCount] = await pool.execute<RowDataPacket[]>(
+      'SELECT COUNT(*) as count FROM users'
+    );
+    const isFirstUser = userCount[0].count === 0;
+
     // Хешируем пароль
     const passwordHash = await bcrypt.hash(data.password, 12);
     const userId = uuidv4();
@@ -51,6 +82,20 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
       `INSERT INTO users (id, username, email, password_hash, display_name) VALUES (?, ?, ?, ?, ?)`,
       [userId, data.username, data.email, passwordHash, data.display_name || data.username]
     );
+
+    // Assign user to groups
+    if (isFirstUser) {
+      // First user becomes administrator
+      await assignUserToGroup(userId, 'administrator');
+      await assignUserToGroup(userId, 'creator');
+      await assignUserToGroup(userId, 'user');
+    } else {
+      // Regular users get 'user' group
+      await assignUserToGroup(userId, 'user');
+    }
+
+    // Get assigned groups
+    const groups = await getUserGroups(userId);
 
     // Создаём сессию
     const sessionId = uuidv4();
@@ -79,6 +124,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
         display_name: data.display_name || data.username,
         avatar_url: null,
         bio: null,
+        groups,
       },
     });
   } catch (error) {
@@ -137,6 +183,9 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       [sessionId, user.id, tokenHash, expiresAt, req.headers['user-agent'] || null, req.ip || null]
     );
 
+    // Get user groups
+    const groups = await getUserGroups(user.id);
+
     res.json({
       message: 'Вход выполнен',
       token,
@@ -147,6 +196,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         display_name: user.display_name,
         avatar_url: user.avatar_url,
         bio: user.bio,
+        groups,
       },
     });
   } catch (error) {
@@ -218,7 +268,10 @@ router.get('/me', authMiddleware, async (req: AuthRequest, res: Response): Promi
       return;
     }
 
-    res.json({ user: users[0] });
+    // Get user groups
+    const groups = await getUserGroups(req.user.id);
+
+    res.json({ user: { ...users[0], groups } });
   } catch (error) {
     console.error('Ошибка получения пользователя:', error);
     res.status(500).json({ error: 'Внутренняя ошибка сервера' });

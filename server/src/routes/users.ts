@@ -19,6 +19,42 @@ const changePasswordSchema = z.object({
   new_password: z.string().min(8),
 });
 
+const updateUserGroupsSchema = z.object({
+  groups: z.array(z.string()),
+});
+
+// Helper: get user groups
+async function getUserGroups(userId: string): Promise<string[]> {
+  const [rows] = await pool.execute<RowDataPacket[]>(
+    `SELECT ug.name FROM user_groups ug
+     JOIN user_group_membership ugm ON ug.id = ugm.group_id
+     WHERE ugm.user_id = ?`,
+    [userId]
+  );
+  return rows.map((r: RowDataPacket) => r.name as string);
+}
+
+// Helper: check if user has a specific right
+async function userHasRight(userId: string, rightName: string): Promise<boolean> {
+  // Get all rights for user's groups
+  const [rows] = await pool.execute<RowDataPacket[]>(
+    `SELECT DISTINCT ur.name FROM user_rights ur
+     JOIN user_group_rights ugr ON ur.id = ugr.right_id
+     JOIN user_group_membership ugm ON ugr.group_id = ugm.group_id
+     WHERE ugm.user_id = ?`,
+    [userId]
+  );
+  const rights = rows.map((r: RowDataPacket) => r.name as string);
+  // Wildcard '*' means all rights
+  return rights.includes('*') || rights.includes(rightName);
+}
+
+// Helper: check if user is administrator
+async function isAdmin(userId: string): Promise<boolean> {
+  const groups = await getUserGroups(userId);
+  return groups.includes('administrator');
+}
+
 // Получить профиль пользователя по ID
 router.get('/:id', optionalAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -157,6 +193,127 @@ router.post('/me/change-password', authMiddleware, async (req: AuthRequest, res:
       return;
     }
     console.error('Ошибка смены пароля:', error);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+});
+
+// Get list of all users (public endpoint)
+router.get('/', optionalAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { sort = 'created_at', order = 'desc', limit = '50', offset = '0' } = req.query as Record<string, string>;
+
+    // Validate sort field
+    const allowedSortFields = ['created_at', 'username', 'display_name'];
+    const sortField = allowedSortFields.includes(sort) ? sort : 'created_at';
+    const sortOrder = order.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+
+    const limitNum = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+    const offsetNum = Math.max(parseInt(offset, 10) || 0, 0);
+
+    // Get total count
+    const [countResult] = await pool.execute<RowDataPacket[]>('SELECT COUNT(*) as total FROM users');
+    const total = countResult[0].total;
+
+    // Get users
+    const [users] = await pool.execute<RowDataPacket[]>(
+      `SELECT id, username, display_name, avatar_url, bio, created_at FROM users ORDER BY ${sortField} ${sortOrder} LIMIT ? OFFSET ?`,
+      [limitNum, offsetNum]
+    );
+
+    // Get groups for each user
+    const usersWithGroups = await Promise.all(
+      users.map(async (user: RowDataPacket) => {
+        const groups = await getUserGroups(user.id);
+        return { ...user, groups };
+      })
+    );
+
+    res.json({
+      users: usersWithGroups,
+      pagination: {
+        total,
+        limit: limitNum,
+        offset: offsetNum,
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+});
+
+// Get all available groups
+router.get('/groups/list', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const [groups] = await pool.execute<RowDataPacket[]>(
+      'SELECT id, name, display_name, description FROM user_groups ORDER BY name'
+    );
+    res.json({ groups });
+  } catch (error) {
+    console.error('Error fetching groups:', error);
+    res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+  }
+});
+
+// Update user groups (admin only)
+router.patch('/:id/groups', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ error: 'Не авторизован' });
+      return;
+    }
+
+    // Check if current user is admin
+    const adminCheck = await isAdmin(req.user.id);
+    if (!adminCheck) {
+      res.status(403).json({ error: 'Недостаточно прав' });
+      return;
+    }
+
+    const { id } = req.params;
+    const data = updateUserGroupsSchema.parse(req.body);
+
+    // Check if target user exists
+    const [targetUsers] = await pool.execute<RowDataPacket[]>(
+      'SELECT id FROM users WHERE id = ?',
+      [id]
+    );
+    if (targetUsers.length === 0) {
+      res.status(404).json({ error: 'Пользователь не найден' });
+      return;
+    }
+
+    // Get valid group IDs
+    const [validGroups] = await pool.execute<RowDataPacket[]>(
+      'SELECT id, name FROM user_groups WHERE name IN (?)',
+      [data.groups.length > 0 ? data.groups : ['']]
+    );
+    const validGroupMap = new Map(validGroups.map((g: RowDataPacket) => [g.name, g.id]));
+
+    // Remove all current group memberships
+    await pool.execute('DELETE FROM user_group_membership WHERE user_id = ?', [id]);
+
+    // Add new group memberships
+    for (const groupName of data.groups) {
+      const groupId = validGroupMap.get(groupName);
+      if (groupId) {
+        await pool.execute(
+          'INSERT INTO user_group_membership (user_id, group_id, assigned_by) VALUES (?, ?, ?)',
+          [id, groupId, req.user.id]
+        );
+      }
+    }
+
+    // Get updated groups
+    const updatedGroups = await getUserGroups(id);
+
+    res.json({ groups: updatedGroups });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json({ error: 'Ошибка валидации', details: error.errors });
+      return;
+    }
+    console.error('Error updating user groups:', error);
     res.status(500).json({ error: 'Внутренняя ошибка сервера' });
   }
 });

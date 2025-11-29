@@ -55,4 +55,15 @@ export const usersApi = {
 
   changePassword: (data: { current_password: string; new_password: string }) =>
     api.post('/users/me/change-password', data),
+
+  // Get list of users with pagination and sorting
+  getUsers: (params?: { sort?: string; order?: string; limit?: number; offset?: number }) =>
+    api.get('/users', { params }),
+
+  // Get all available groups
+  getGroups: () => api.get('/users/groups/list'),
+
+  // Update user groups (admin only)
+  updateUserGroups: (userId: string, groups: string[]) =>
+    api.patch(`/users/${userId}/groups`, { groups }),
 };

@@ -6,6 +6,23 @@ export interface User {
   avatar_url: string | null;
   bio: string | null;
   created_at?: string;
+  groups?: string[];
+}
+
+export interface UserGroup {
+  id: number;
+  name: string;
+  display_name: string;
+  description?: string;
+}
+
+export interface UsersListResponse {
+  users: User[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+  };
 }
 
 export interface AuthState {

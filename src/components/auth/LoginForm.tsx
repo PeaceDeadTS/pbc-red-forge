@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,13 +11,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
-const loginSchema = z.object({
-  login: z.string().min(1, 'Введите логин или email'),
-  password: z.string().min(1, 'Введите пароль'),
-  remember_me: z.boolean().optional(),
-});
+const createLoginSchema = (t: (key: string) => string) =>
+  z.object({
+    login: z.string().min(1, t('validation.loginRequired')),
+    password: z.string().min(1, t('validation.passwordRequired')),
+    remember_me: z.boolean().optional(),
+  });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = z.infer<ReturnType<typeof createLoginSchema>>;
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -28,6 +29,8 @@ export const LoginForm = ({ onSuccess }: LoginFormProps) => {
   const { login } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const loginSchema = useMemo(() => createLoginSchema(t), [t]);
 
   const {
     register,

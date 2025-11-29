@@ -2,25 +2,21 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, Globe, LogOut } from 'lucide-react';
+import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthModal } from '@/components/auth';
+import { LanguageSelector } from '@/components/LanguageSelector';
 
 export const Navigation = () => {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const location = useLocation();
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'ru' : 'en';
-    i18n.changeLanguage(newLang);
-  };
 
   const navItems = [
     { path: '/', label: t('nav.home'), icon: Home },
@@ -81,14 +77,7 @@ export const Navigation = () => {
 
           {/* Actions */}
           <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleLanguage}
-              className="text-muted-foreground hover:text-foreground"
-            >
-              <Globe className="h-5 w-5" />
-            </Button>
+            <LanguageSelector />
 
             {isAuthenticated && user ? (
               <DropdownMenu>

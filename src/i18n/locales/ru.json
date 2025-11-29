@@ -43,11 +43,6 @@
     "generate": "Генерировать",
     "version": "Версия"
   },
-  "common": {
-    "loading": "Загрузка...",
-    "error": "Произошла ошибка",
-    "noResults": "Результаты не найдены"
-  },
   "auth": {
     "signIn": "Войти",
     "signUp": "Регистрация",
@@ -83,5 +78,30 @@
     "passwordChanged": "Пароль успешно изменён",
     "profileUpdated": "Профиль обновлён",
     "logoutAll": "Выйти со всех устройств"
+  },
+  "validation": {
+    "usernameMin": "Минимум 3 символа",
+    "usernameMax": "Максимум 50 символов",
+    "usernamePattern": "Только буквы, цифры и _",
+    "emailInvalid": "Некорректный email",
+    "passwordMin": "Минимум 8 символов",
+    "passwordMismatch": "Пароли не совпадают",
+    "loginRequired": "Введите логин или email",
+    "passwordRequired": "Введите пароль"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "error": "Произошла ошибка",
+    "noResults": "Результаты не найдены",
+    "save": "Сохранить",
+    "cancel": "Отмена"
+  },
+  "language": {
+    "select": "Выбрать язык",
+    "en": "Английский",
+    "ru": "Русский",
+    "de": "Немецкий",
+    "es": "Испанский",
+    "fr": "Французский"
   }
 }

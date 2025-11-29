@@ -9,7 +9,7 @@ export const api = axios.create({
   },
 });
 
-// Интерцептор для добавления токена
+// Request interceptor to attach auth token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('auth_token');
   if (token) {
@@ -18,14 +18,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Интерцептор для обработки ошибок авторизации
+// Response interceptor to handle auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
-      // Можно добавить редирект на страницу логина
+      // Could add redirect to login page here
     }
     return Promise.reject(error);
   }

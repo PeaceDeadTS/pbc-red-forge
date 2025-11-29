@@ -43,11 +43,6 @@
     "generate": "Generate",
     "version": "Version"
   },
-  "common": {
-    "loading": "Loading...",
-    "error": "An error occurred",
-    "noResults": "No results found"
-  },
   "auth": {
     "signIn": "Sign In",
     "signUp": "Sign Up",
@@ -83,5 +78,30 @@
     "passwordChanged": "Password changed successfully",
     "profileUpdated": "Profile updated successfully",
     "logoutAll": "Sign out from all devices"
+  },
+  "validation": {
+    "usernameMin": "Minimum 3 characters",
+    "usernameMax": "Maximum 50 characters",
+    "usernamePattern": "Only letters, numbers and _",
+    "emailInvalid": "Invalid email address",
+    "passwordMin": "Minimum 8 characters",
+    "passwordMismatch": "Passwords do not match",
+    "loginRequired": "Enter username or email",
+    "passwordRequired": "Enter password"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "noResults": "No results found",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "language": {
+    "select": "Select language",
+    "en": "English",
+    "ru": "Russian",
+    "de": "German",
+    "es": "Spanish",
+    "fr": "French"
   }
 }

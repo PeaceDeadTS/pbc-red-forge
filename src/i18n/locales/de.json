@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "browse": "Durchsuchen",
+    "generate": "Generieren",
+    "profile": "Profil",
+    "signIn": "Anmelden"
+  },
+  "hero": {
+    "title": "Entdecken & Erstellen",
+    "subtitle": "Erkunden Sie Tausende von KI-Modellen, erstellen Sie beeindruckende Inhalte und teilen Sie Ihre Kreationen mit der Community",
+    "ctaExplore": "Modelle erkunden",
+    "ctaGenerate": "Generierung starten"
+  },
+  "browse": {
+    "title": "Modelle durchsuchen",
+    "search": "Modelle, Tags, Ersteller suchen...",
+    "filters": {
+      "all": "Alle",
+      "checkpoint": "Checkpoint",
+      "lora": "LoRA",
+      "textualInversion": "Textuelle Inversion",
+      "hypernetwork": "Hypernetzwerk",
+      "aestheticGradient": "Ästhetischer Gradient",
+      "controlnet": "ControlNet",
+      "poses": "Posen"
+    },
+    "sortBy": "Sortieren nach",
+    "newest": "Neueste",
+    "popular": "Beliebteste",
+    "rating": "Höchste Bewertung",
+    "downloads": "Meiste Downloads"
+  },
+  "model": {
+    "versions": "Versionen",
+    "downloads": "Downloads",
+    "likes": "Gefällt mir",
+    "tags": "Tags",
+    "creator": "Ersteller",
+    "description": "Beschreibung",
+    "examples": "Beispiele",
+    "download": "Herunterladen",
+    "generate": "Generieren",
+    "version": "Version"
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Ein Fehler ist aufgetreten",
+    "noResults": "Keine Ergebnisse gefunden",
+    "save": "Speichern",
+    "cancel": "Abbrechen"
+  },
+  "auth": {
+    "signIn": "Anmelden",
+    "signUp": "Registrieren",
+    "signOut": "Abmelden",
+    "loginOrEmail": "Benutzername oder E-Mail",
+    "loginPlaceholder": "Benutzername oder E-Mail eingeben",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "username": "Benutzername",
+    "email": "E-Mail",
+    "displayName": "Anzeigename",
+    "displayNamePlaceholder": "Wie andere Sie sehen werden",
+    "rememberMe": "30 Tage angemeldet bleiben",
+    "loginSuccess": "Willkommen zurück!",
+    "welcomeBack": "Sie haben sich erfolgreich angemeldet",
+    "registerSuccess": "Willkommen!",
+    "welcomeNew": "Ihr Konto wurde erstellt",
+    "error": "Fehler",
+    "loginError": "Ungültige Anmeldedaten",
+    "registerError": "Registrierung fehlgeschlagen"
+  },
+  "profile": {
+    "myProfile": "Mein Profil",
+    "editProfile": "Profil bearbeiten",
+    "settings": "Einstellungen",
+    "bio": "Biografie",
+    "memberSince": "Mitglied seit",
+    "noUser": "Benutzer nicht gefunden",
+    "signInPrompt": "Melden Sie sich an, um Ihr Profil anzuzeigen",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "passwordChanged": "Passwort erfolgreich geändert",
+    "profileUpdated": "Profil erfolgreich aktualisiert",
+    "logoutAll": "Von allen Geräten abmelden"
+  },
+  "validation": {
+    "usernameMin": "Mindestens 3 Zeichen",
+    "usernameMax": "Maximal 50 Zeichen",
+    "usernamePattern": "Nur Buchstaben, Zahlen und _",
+    "emailInvalid": "Ungültige E-Mail-Adresse",
+    "passwordMin": "Mindestens 8 Zeichen",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "loginRequired": "Benutzername oder E-Mail eingeben",
+    "passwordRequired": "Passwort eingeben"
+  },
+  "language": {
+    "select": "Sprache auswählen",
+    "en": "Englisch",
+    "ru": "Russisch",
+    "de": "Deutsch",
+    "es": "Spanisch",
+    "fr": "Französisch"
+  }
+}

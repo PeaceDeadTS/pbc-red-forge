@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "browse": "Explorar",
+    "generate": "Generar",
+    "profile": "Perfil",
+    "signIn": "Iniciar sesión"
+  },
+  "hero": {
+    "title": "Descubre y Crea",
+    "subtitle": "Explora miles de modelos de IA, genera contenido impresionante y comparte tus creaciones con la comunidad",
+    "ctaExplore": "Explorar Modelos",
+    "ctaGenerate": "Comenzar a Generar"
+  },
+  "browse": {
+    "title": "Explorar Modelos",
+    "search": "Buscar modelos, etiquetas, creadores...",
+    "filters": {
+      "all": "Todos",
+      "checkpoint": "Checkpoint",
+      "lora": "LoRA",
+      "textualInversion": "Inversión Textual",
+      "hypernetwork": "Hiperred",
+      "aestheticGradient": "Gradiente Estético",
+      "controlnet": "ControlNet",
+      "poses": "Poses"
+    },
+    "sortBy": "Ordenar por",
+    "newest": "Más recientes",
+    "popular": "Más populares",
+    "rating": "Mejor valorados",
+    "downloads": "Más descargados"
+  },
+  "model": {
+    "versions": "Versiones",
+    "downloads": "Descargas",
+    "likes": "Me gusta",
+    "tags": "Etiquetas",
+    "creator": "Creador",
+    "description": "Descripción",
+    "examples": "Ejemplos",
+    "download": "Descargar",
+    "generate": "Generar",
+    "version": "Versión"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "error": "Ha ocurrido un error",
+    "noResults": "No se encontraron resultados",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "auth": {
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesión",
+    "loginOrEmail": "Usuario o correo electrónico",
+    "loginPlaceholder": "Ingresa usuario o correo",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "username": "Nombre de usuario",
+    "email": "Correo electrónico",
+    "displayName": "Nombre para mostrar",
+    "displayNamePlaceholder": "Cómo te verán los demás",
+    "rememberMe": "Recordarme por 30 días",
+    "loginSuccess": "¡Bienvenido de nuevo!",
+    "welcomeBack": "Has iniciado sesión correctamente",
+    "registerSuccess": "¡Bienvenido!",
+    "welcomeNew": "Tu cuenta ha sido creada",
+    "error": "Error",
+    "loginError": "Credenciales inválidas",
+    "registerError": "Error en el registro"
+  },
+  "profile": {
+    "myProfile": "Mi Perfil",
+    "editProfile": "Editar Perfil",
+    "settings": "Configuración",
+    "bio": "Biografía",
+    "memberSince": "Miembro desde",
+    "noUser": "Usuario no encontrado",
+    "signInPrompt": "Inicia sesión para ver tu perfil",
+    "changePassword": "Cambiar Contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "passwordChanged": "Contraseña cambiada correctamente",
+    "profileUpdated": "Perfil actualizado correctamente",
+    "logoutAll": "Cerrar sesión en todos los dispositivos"
+  },
+  "validation": {
+    "usernameMin": "Mínimo 3 caracteres",
+    "usernameMax": "Máximo 50 caracteres",
+    "usernamePattern": "Solo letras, números y _",
+    "emailInvalid": "Correo electrónico inválido",
+    "passwordMin": "Mínimo 8 caracteres",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "loginRequired": "Ingresa usuario o correo",
+    "passwordRequired": "Ingresa la contraseña"
+  },
+  "language": {
+    "select": "Seleccionar idioma",
+    "en": "Inglés",
+    "ru": "Ruso",
+    "de": "Alemán",
+    "es": "Español",
+    "fr": "Francés"
+  }
+}

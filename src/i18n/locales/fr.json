@@ -1,0 +1,107 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "browse": "Parcourir",
+    "generate": "Générer",
+    "profile": "Profil",
+    "signIn": "Connexion"
+  },
+  "hero": {
+    "title": "Découvrez & Créez",
+    "subtitle": "Explorez des milliers de modèles d'IA, générez du contenu époustouflant et partagez vos créations avec la communauté",
+    "ctaExplore": "Explorer les Modèles",
+    "ctaGenerate": "Commencer à Générer"
+  },
+  "browse": {
+    "title": "Parcourir les Modèles",
+    "search": "Rechercher modèles, tags, créateurs...",
+    "filters": {
+      "all": "Tous",
+      "checkpoint": "Checkpoint",
+      "lora": "LoRA",
+      "textualInversion": "Inversion Textuelle",
+      "hypernetwork": "Hyperréseau",
+      "aestheticGradient": "Gradient Esthétique",
+      "controlnet": "ControlNet",
+      "poses": "Poses"
+    },
+    "sortBy": "Trier par",
+    "newest": "Plus récents",
+    "popular": "Plus populaires",
+    "rating": "Mieux notés",
+    "downloads": "Plus téléchargés"
+  },
+  "model": {
+    "versions": "Versions",
+    "downloads": "Téléchargements",
+    "likes": "J'aime",
+    "tags": "Tags",
+    "creator": "Créateur",
+    "description": "Description",
+    "examples": "Exemples",
+    "download": "Télécharger",
+    "generate": "Générer",
+    "version": "Version"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "noResults": "Aucun résultat trouvé",
+    "save": "Enregistrer",
+    "cancel": "Annuler"
+  },
+  "auth": {
+    "signIn": "Connexion",
+    "signUp": "Inscription",
+    "signOut": "Déconnexion",
+    "loginOrEmail": "Nom d'utilisateur ou e-mail",
+    "loginPlaceholder": "Entrez nom d'utilisateur ou e-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "username": "Nom d'utilisateur",
+    "email": "E-mail",
+    "displayName": "Nom d'affichage",
+    "displayNamePlaceholder": "Comment les autres vous verront",
+    "rememberMe": "Se souvenir de moi pendant 30 jours",
+    "loginSuccess": "Bon retour !",
+    "welcomeBack": "Vous vous êtes connecté avec succès",
+    "registerSuccess": "Bienvenue !",
+    "welcomeNew": "Votre compte a été créé",
+    "error": "Erreur",
+    "loginError": "Identifiants invalides",
+    "registerError": "Échec de l'inscription"
+  },
+  "profile": {
+    "myProfile": "Mon Profil",
+    "editProfile": "Modifier le Profil",
+    "settings": "Paramètres",
+    "bio": "Biographie",
+    "memberSince": "Membre depuis",
+    "noUser": "Utilisateur non trouvé",
+    "signInPrompt": "Connectez-vous pour voir votre profil",
+    "changePassword": "Changer le mot de passe",
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "passwordChanged": "Mot de passe modifié avec succès",
+    "profileUpdated": "Profil mis à jour avec succès",
+    "logoutAll": "Se déconnecter de tous les appareils"
+  },
+  "validation": {
+    "usernameMin": "Minimum 3 caractères",
+    "usernameMax": "Maximum 50 caractères",
+    "usernamePattern": "Uniquement lettres, chiffres et _",
+    "emailInvalid": "Adresse e-mail invalide",
+    "passwordMin": "Minimum 8 caractères",
+    "passwordMismatch": "Les mots de passe ne correspondent pas",
+    "loginRequired": "Entrez nom d'utilisateur ou e-mail",
+    "passwordRequired": "Entrez le mot de passe"
+  },
+  "language": {
+    "select": "Sélectionner la langue",
+    "en": "Anglais",
+    "ru": "Russe",
+    "de": "Allemand",
+    "es": "Espagnol",
+    "fr": "Français"
+  }
+}

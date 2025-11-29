@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,22 +10,23 @@ import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 
-const registerSchema = z.object({
-  username: z
-    .string()
-    .min(3, 'Минимум 3 символа')
-    .max(50, 'Максимум 50 символов')
-    .regex(/^[a-zA-Z0-9_]+$/, 'Только буквы, цифры и _'),
-  email: z.string().email('Некорректный email'),
-  password: z.string().min(8, 'Минимум 8 символов'),
-  confirmPassword: z.string(),
-  display_name: z.string().max(100).optional(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: 'Пароли не совпадают',
-  path: ['confirmPassword'],
-});
+const createRegisterSchema = (t: (key: string) => string) =>
+  z.object({
+    username: z
+      .string()
+      .min(3, t('validation.usernameMin'))
+      .max(50, t('validation.usernameMax'))
+      .regex(/^[a-zA-Z0-9_]+$/, t('validation.usernamePattern')),
+    email: z.string().email(t('validation.emailInvalid')),
+    password: z.string().min(8, t('validation.passwordMin')),
+    confirmPassword: z.string(),
+    display_name: z.string().max(100).optional(),
+  }).refine((data) => data.password === data.confirmPassword, {
+    message: t('validation.passwordMismatch'),
+    path: ['confirmPassword'],
+  });
 
-type RegisterFormData = z.infer<typeof registerSchema>;
+type RegisterFormData = z.infer<ReturnType<typeof createRegisterSchema>>;
 
 interface RegisterFormProps {
   onSuccess?: () => void;
@@ -36,6 +37,8 @@ export const RegisterForm = ({ onSuccess }: RegisterFormProps) => {
   const { register: registerUser } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
+
+  const registerSchema = useMemo(() => createRegisterSchema(t), [t]);
 
   const {
     register,

@@ -34,7 +34,7 @@ const Profile = () => {
     bio: '',
   });
 
-  // Определяем, чей профиль показывать
+  // Determine which profile to show
   const targetUserId = id || currentUser?.id;
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const Profile = () => {
     navigate('/');
   };
 
-  // Показываем загрузку
+  // Show loading state
   if (authLoading || isLoading) {
     return (
       <div className="min-h-screen pt-24 pb-12 flex items-center justify-center">
@@ -99,7 +99,7 @@ const Profile = () => {
     );
   }
 
-  // Если нет ID и пользователь не авторизован — показываем приглашение войти
+  // If no ID and user is not authenticated, show sign-in prompt
   if (!id && !isAuthenticated) {
     return (
       <div className="min-h-screen pt-24 pb-12">
@@ -144,7 +144,7 @@ const Profile = () => {
     );
   }
 
-  // Пользователь не найден
+  // User not found
   if (!profileUser) {
     return (
       <div className="min-h-screen pt-24 pb-12">
@@ -206,10 +206,10 @@ const Profile = () => {
                     <div className="flex gap-2">
                       <Button onClick={handleSaveProfile} disabled={isSaving}>
                         {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        {t('common.loading').replace('...', '')}Save
+                        {t('common.save')}
                       </Button>
                       <Button variant="outline" onClick={() => setIsEditing(false)}>
-                        Cancel
+                        {t('common.cancel')}
                       </Button>
                     </div>
                   </div>

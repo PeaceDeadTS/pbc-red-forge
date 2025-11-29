@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     isLoading: true,
   });
 
-  // Проверка токена при загрузке
+  // Check token on load
   useEffect(() => {
     const initAuth = async () => {
       const token = localStorage.getItem('auth_token');
@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
       if (token && savedUser) {
         try {
-          // Проверяем валидность токена
+          // Verify token validity
           const response = await authApi.me();
           const user = response.data.user;
 
@@ -51,10 +51,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             isLoading: false,
           });
 
-          // Обновляем сохранённые данные
+          // Update saved data
           localStorage.setItem('auth_user', JSON.stringify(user));
         } catch {
-          // Токен невалиден
+          // Token is invalid
           localStorage.removeItem('auth_token');
           localStorage.removeItem('auth_user');
           setState({
@@ -106,7 +106,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await authApi.logout();
     } catch {
-      // Игнорируем ошибки при выходе
+      // Ignore errors on logout
     }
 
     localStorage.removeItem('auth_token');
@@ -124,7 +124,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       await authApi.logoutAll();
     } catch {
-      // Игнорируем ошибки
+      // Ignore errors
     }
 
     localStorage.removeItem('auth_token');

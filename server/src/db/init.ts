@@ -1,8 +1,7 @@
-import { pool, testConnection } from '../config/database.js';
-import { ensureSchema } from './schema.js';
+import { pool, testConnection, ensureSchema } from '../shared/index.js';
 
 const initDatabase = async () => {
-  console.log('🔄 Инициализация базы данных...');
+  console.log('🔄 Initializing database...');
 
   const connected = await testConnection();
   if (!connected) {
@@ -11,9 +10,9 @@ const initDatabase = async () => {
 
   try {
     await ensureSchema();
-    console.log('🎉 База данных успешно инициализирована!');
+    console.log('🎉 Database initialized successfully!');
   } catch (error) {
-    console.error('❌ Ошибка инициализации БД:', error);
+    console.error('❌ Database initialization error:', error);
     process.exit(1);
   }
 

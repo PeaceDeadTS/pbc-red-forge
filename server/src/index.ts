@@ -2,10 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fs from 'fs';
-import { testConnection } from './config/database.js';
-import { ensureSchema } from './db/schema.js';
-import authRoutes from './routes/auth.js';
-import usersRoutes from './routes/users.js';
+
+// Shared infrastructure
+import { testConnection, ensureSchema } from './shared/index.js';
+
+// Feature modules
+import { authRoutes } from './modules/auth/index.js';
+import { usersRoutes } from './modules/users/index.js';
+import { generationRoutes } from './modules/generation/index.js';
 
 dotenv.config();
 
@@ -20,31 +24,32 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Trust proxy для корректного определения IP
+// Trust proxy for correct IP detection
 app.set('trust proxy', 1);
 
-// Routes
+// Routes - Feature modules
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRoutes);
+app.use('/api/generation', generationRoutes);
 
 // Health check
 app.get('/api/health', (_, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Запуск сервера
+// Start server
 const start = async () => {
   const dbConnected = await testConnection();
   if (!dbConnected) {
-    console.error('❌ Не удалось подключиться к базе данных. Сервер не запущен.');
+    console.error('❌ Database connection failed. Server not started.');
     process.exit(1);
   }
 
   try {
     await ensureSchema();
-    console.log('✅ Схема базы данных проверена/инициализирована');
+    console.log('✅ Database schema verified/initialized');
   } catch (error) {
-    console.error('❌ Ошибка инициализации схемы БД:', error);
+    console.error('❌ Database schema initialization error:', error);
     process.exit(1);
   }
 
@@ -54,17 +59,17 @@ const start = async () => {
     }
 
     const server = app.listen(SOCKET_PATH, () => {
-      console.log(`🚀 API сервер запущен на Unix-сокете ${SOCKET_PATH}`);
+      console.log(`🚀 API server running on Unix socket ${SOCKET_PATH}`);
     });
 
-    // Обеспечиваем права доступа к сокету для nginx (www-data)
+    // Set socket permissions for nginx (www-data)
     fs.chmodSync(SOCKET_PATH, 0o660);
 
     return server;
   }
 
   app.listen(PORT, () => {
-    console.log(`🚀 API сервер запущен на порту ${PORT}`);
+    console.log(`🚀 API server running on port ${PORT}`);
     console.log(`📍 http://localhost:${PORT}`);
   });
 };

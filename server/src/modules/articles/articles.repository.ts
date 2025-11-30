@@ -302,8 +302,8 @@ export const articlesRepository = {
 
     // Tag filters (include/exclude)
     const includeTagsSource = query.include_tags ?? (query.tag ? [query.tag] : undefined);
-    const includeTags = includeTagsSource?.map((t) => t.toLowerCase()) ?? [];
-    const excludeTags = (query.exclude_tags ?? []).map((t) => t.toLowerCase());
+    const includeTags = normalizeTagFilter(includeTagsSource);
+    const excludeTags = normalizeTagFilter(query.exclude_tags);
 
     if (includeTags.length > 0) {
       const placeholders = includeTags.map(() => '?').join(', ');

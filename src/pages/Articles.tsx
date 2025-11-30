@@ -15,7 +15,7 @@ import type { ArticleListItem, TagWithCount } from '@/types/article';
 const Articles = () => {
   const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [articles, setArticles] = useState<ArticleListItem[]>([]);
   const [tags, setTags] = useState<TagWithCount[]>([]);
@@ -33,6 +33,9 @@ const Articles = () => {
   const [page, setPage] = useState(1);
   const limit = 20;
 
+  // URL state sync
+  const [isQueryStateInitialized, setIsQueryStateInitialized] = useState(false);
+
   const includeTags = Object.entries(tagFilters)
     .filter(([, mode]) => mode === 'include')
     .map(([tag]) => tag);
@@ -41,19 +44,113 @@ const Articles = () => {
     .filter(([, mode]) => mode === 'exclude')
     .map(([tag]) => tag);
 
-  // Инициализация include-фильтра из ?tag= при переходе со страницы статьи
+  // Инициализация состояния из URL (поиск, сортировка, страница, теги)
   useEffect(() => {
-    const tagFromQuery = searchParams.get('tag');
-    if (!tagFromQuery) return;
+    const includeFromUrl = searchParams.getAll('include_tags');
+    const excludeFromUrl = searchParams.getAll('exclude_tags');
+    const singleTag = searchParams.get('tag');
+    const searchFromUrl = searchParams.get('search') ?? '';
+    const sortFromUrl = searchParams.get('sort');
+    const orderFromUrl = searchParams.get('order');
+    const pageFromUrl = searchParams.get('page');
 
-    setTagFilters((prev) => {
-      if (Object.keys(prev).length === 1 && prev[tagFromQuery] === 'include') {
-        return prev;
+    const nextTagFilters: Record<string, 'include' | 'exclude'> = {};
+
+    includeFromUrl.forEach((tag) => {
+      if (tag) {
+        nextTagFilters[tag] = 'include';
       }
-      return { [tagFromQuery]: 'include' };
     });
-    setPage(1);
-  }, [searchParams]);
+
+    excludeFromUrl.forEach((tag) => {
+      if (tag && !nextTagFilters[tag]) {
+        nextTagFilters[tag] = 'exclude';
+      }
+    });
+
+    if (singleTag && !nextTagFilters[singleTag]) {
+      nextTagFilters[singleTag] = 'include';
+    }
+
+    const currentTagKeys = Object.keys(tagFilters);
+    const nextTagKeys = Object.keys(nextTagFilters);
+    const tagsChanged =
+      currentTagKeys.length !== nextTagKeys.length ||
+      currentTagKeys.some((key) => tagFilters[key] !== nextTagFilters[key]);
+
+    if (tagsChanged) {
+      setTagFilters(nextTagFilters);
+    }
+
+    if (searchFromUrl !== search) {
+      setSearch(searchFromUrl);
+    }
+
+    const allowedSortFields: Array<'created_at' | 'title' | 'views'> = ['created_at', 'title', 'views'];
+    if (sortFromUrl && allowedSortFields.includes(sortFromUrl as any) && sortFromUrl !== sortBy) {
+      setSortBy(sortFromUrl);
+    }
+
+    if ((orderFromUrl === 'asc' || orderFromUrl === 'desc') && orderFromUrl !== sortOrder) {
+      setSortOrder(orderFromUrl);
+    }
+
+    if (pageFromUrl) {
+      const parsed = Number.parseInt(pageFromUrl, 10);
+      const safePage = Number.isNaN(parsed) || parsed < 1 ? 1 : parsed;
+      if (safePage !== page) {
+        setPage(safePage);
+      }
+    }
+
+    if (!isQueryStateInitialized) {
+      setIsQueryStateInitialized(true);
+    }
+  }, [searchParams, tagFilters, search, sortBy, sortOrder, page, isQueryStateInitialized]);
+
+  // Синхронизация состояния (поиск, сортировка, страница, теги) с URL
+  useEffect(() => {
+    if (!isQueryStateInitialized) {
+      return;
+    }
+
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+
+      // Теги
+      params.delete('include_tags');
+      params.delete('exclude_tags');
+      params.delete('tag');
+
+      includeTags.forEach((tag) => {
+        params.append('include_tags', tag);
+      });
+
+      excludeTags.forEach((tag) => {
+        params.append('exclude_tags', tag);
+      });
+
+      // Поиск
+      if (search) {
+        params.set('search', search);
+      } else {
+        params.delete('search');
+      }
+
+      // Сортировка
+      params.set('sort', sortBy);
+      params.set('order', sortOrder);
+
+      // Страница
+      if (page > 1) {
+        params.set('page', String(page));
+      } else {
+        params.delete('page');
+      }
+
+      return params;
+    });
+  }, [isQueryStateInitialized, includeTags.join(','), excludeTags.join(','), search, sortBy, sortOrder, page, setSearchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -101,6 +198,16 @@ const Articles = () => {
     };
     checkCanCreate();
   }, [isAuthenticated, user]);
+
+  const handleSortByChange = (value: string) => {
+    setSortBy(value);
+    setPage(1);
+  };
+
+  const handleSortOrderChange = (value: string) => {
+    setSortOrder(value);
+    setPage(1);
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,7 +288,7 @@ const Articles = () => {
             </form>
 
             <div className="flex gap-2">
-              <Select value={sortBy} onValueChange={setSortBy}>
+              <Select value={sortBy} onValueChange={handleSortByChange}>
                 <SelectTrigger className="w-[160px]">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue />
@@ -193,7 +300,7 @@ const Articles = () => {
                 </SelectContent>
               </Select>
 
-              <Select value={sortOrder} onValueChange={setSortOrder}>
+              <Select value={sortOrder} onValueChange={handleSortOrderChange}>
                 <SelectTrigger className="w-[120px]">
                   <SelectValue />
                 </SelectTrigger>

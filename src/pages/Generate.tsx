@@ -7,7 +7,7 @@ const Generate = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-6xl 2xl:max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

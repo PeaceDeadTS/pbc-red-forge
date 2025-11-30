@@ -20,7 +20,7 @@ const Home = () => {
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[128px] animate-float" style={{ animationDelay: '1s' }} />
         </div>
 
-        <div className="container mx-auto px-4 text-center space-y-8">
+        <div className="container mx-auto px-4 max-w-6xl 2xl:max-w-7xl text-center space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +60,7 @@ const Home = () => {
 
       {/* Featured Models Section */}
       <section className="py-20 bg-gradient-to-b from-background to-card/20">
-        <div className="container mx-auto px-4 space-y-12">
+        <div className="container mx-auto px-4 max-w-6xl 2xl:max-w-7xl space-y-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

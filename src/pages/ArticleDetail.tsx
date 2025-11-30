@@ -140,7 +140,7 @@ const ArticleDetail = () => {
         </div>
       )}
 
-      <div className="container mx-auto px-4 max-w-5xl xl:max-w-6xl">
+      <div className="container mx-auto px-4 max-w-6xl 2xl:max-w-7xl">
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

@@ -40,7 +40,7 @@ const ModelDetail = () => {
 
   return (
     <div className="min-h-screen pt-24 pb-12">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-6xl 2xl:max-w-7xl">
         {/* Back Button */}
         <Link to="/browse">
           <Button variant="ghost" className="mb-6">

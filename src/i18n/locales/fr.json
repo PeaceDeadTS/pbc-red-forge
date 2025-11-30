@@ -2,6 +2,7 @@
   "nav": {
     "home": "Accueil",
     "browse": "Parcourir",
+    "articles": "Articles",
     "generate": "Générer",
     "users": "Utilisateurs",
     "profile": "Profil",
@@ -50,7 +51,11 @@
     "error": "Une erreur s'est produite",
     "noResults": "Aucun résultat trouvé",
     "save": "Enregistrer",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "back": "Retour",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page"
   },
   "auth": {
     "signIn": "Connexion",
@@ -133,6 +138,7 @@
     "adminOnly": "Cette page est uniquement accessible aux administrateurs",
     "tabs": {
       "users": "Utilisateurs",
+      "articles": "Articles",
       "content": "Contenu",
       "settings": "Paramètres",
       "system": "Système"
@@ -259,6 +265,93 @@
       "backupDb": "Sauvegarder la BD",
       "viewLogs": "Voir les Logs",
       "restartServices": "Redémarrer les Services"
+    },
+    "articles": {
+      "totalArticles": "Total des Articles",
+      "manageArticles": "Gérer les Articles",
+      "manageArticlesDesc": "Voir et gérer tous les articles de la plateforme",
+      "searchPlaceholder": "Rechercher des articles...",
+      "filterByStatus": "Filtrer par statut",
+      "allStatuses": "Tous les statuts",
+      "article": "Article",
+      "author": "Auteur",
+      "status": "Statut",
+      "views": "Vues",
+      "date": "Date",
+      "view": "Voir",
+      "unpublish": "Dépublier",
+      "statusUpdated": "Statut mis à jour"
+    }
+  },
+  "articles": {
+    "title": "Articles",
+    "subtitle": "Découvrez des guides, tutoriels et insights de notre communauté",
+    "create": "Écrire un Article",
+    "createNew": "Nouvel Article",
+    "editArticle": "Modifier l'Article",
+    "searchPlaceholder": "Rechercher des articles...",
+    "allTags": "Tous",
+    "noArticles": "Aucun article trouvé",
+    "noArticlesDesc": "Soyez le premier à partager vos connaissances avec la communauté !",
+    "totalArticles": "{{count}} articles au total",
+    "views": "vues",
+    "sort": {
+      "date": "Date",
+      "title": "Titre",
+      "views": "Vues",
+      "desc": "Plus récents",
+      "asc": "Plus anciens"
+    },
+    "status": {
+      "draft": "Brouillon",
+      "published": "Publié",
+      "private": "Privé"
+    },
+    "notFound": "Article non trouvé",
+    "notFoundDesc": "L'article que vous recherchez n'existe pas ou a été supprimé.",
+    "backToArticles": "Retour aux Articles",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "deleteConfirmTitle": "Supprimer l'Article",
+    "deleteConfirmDesc": "Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.",
+    "deleted": "Article Supprimé",
+    "deletedDesc": "L'article a été supprimé avec succès.",
+    "deleteError": "Échec de la suppression de l'article",
+    "writtenBy": "Écrit par",
+    "viewProfile": "Voir le Profil",
+    "titleLabel": "Titre",
+    "titlePlaceholder": "Entrez le titre de l'article...",
+    "contentLabel": "Contenu",
+    "contentPlaceholder": "Commencez à écrire votre article...",
+    "statusLabel": "Statut",
+    "slugLabel": "Slug URL",
+    "slugPlaceholder": "slug-url-article",
+    "slugHint": "Identifiant convivial pour l'URL de votre article",
+    "headerImageLabel": "Image d'En-tête",
+    "headerImagePlaceholder": "Entrez l'URL de l'image...",
+    "excerptLabel": "Extrait",
+    "excerptPlaceholder": "Brève description de votre article...",
+    "tagsLabel": "Tags",
+    "tagPlaceholder": "Ajouter un tag...",
+    "tagsHint": "{{count}} tags restants",
+    "saveDraft": "Enregistrer le Brouillon",
+    "publish": "Publier",
+    "saved": "Article Enregistré",
+    "savedDesc": "Votre article a été enregistré avec succès.",
+    "saveError": "Échec de l'enregistrement de l'article",
+    "titleRequired": "Le titre est requis",
+    "contentRequired": "Le contenu est requis",
+    "noPermission": "Vous n'avez pas la permission de créer ou modifier des articles",
+    "editor": {
+      "placeholder": "Commencez à écrire votre article..."
+    },
+    "myArticles": "Mes Articles",
+    "myArticlesDesc": "Gérez vos articles publiés et brouillons",
+    "stats": {
+      "total": "Total",
+      "published": "Publiés",
+      "drafts": "Brouillons",
+      "private": "Privés"
     }
   }
 }

@@ -1,5 +1,5 @@
-import { Router, Request, Response } from 'express';
-import { authMiddleware, optionalAuthMiddleware } from '../../shared/index.js';
+import { Router, Response } from 'express';
+import { authMiddleware, optionalAuthMiddleware, AuthRequest } from '../../shared/index.js';
 import { articlesService } from './articles.service.js';
 import {
   createArticleSchema,
@@ -15,7 +15,7 @@ const router = Router();
  * GET /articles
  * Get list of articles with filtering and pagination
  */
-router.get('/', optionalAuthMiddleware, async (req: Request, res: Response) => {
+router.get('/', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const queryResult = getArticlesQuerySchema.safeParse(req.query);
     if (!queryResult.success) {
@@ -53,7 +53,7 @@ router.get('/tags', async (_req: Request, res: Response) => {
  * GET /articles/my
  * Get current user's articles
  */
-router.get('/my', authMiddleware, async (req: Request, res: Response) => {
+router.get('/my', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const queryResult = getArticlesQuerySchema.safeParse({ ...req.query, author_id: userId, status: 'all' });
@@ -76,7 +76,7 @@ router.get('/my', authMiddleware, async (req: Request, res: Response) => {
  * GET /articles/my/stats
  * Get current user's articles statistics
  */
-router.get('/my/stats', authMiddleware, async (req: Request, res: Response) => {
+router.get('/my/stats', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const stats = await articlesService.getUserStats(userId);
@@ -91,7 +91,7 @@ router.get('/my/stats', authMiddleware, async (req: Request, res: Response) => {
  * GET /articles/can-create
  * Check if current user can create articles
  */
-router.get('/can-create', authMiddleware, async (req: Request, res: Response) => {
+router.get('/can-create', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const userId = req.user!.id;
     const canCreate = await articlesService.canUserCreateArticles(userId);
@@ -106,7 +106,7 @@ router.get('/can-create', authMiddleware, async (req: Request, res: Response) =>
  * GET /articles/user/:userId
  * Get articles by specific user
  */
-router.get('/user/:userId', optionalAuthMiddleware, async (req: Request, res: Response) => {
+router.get('/user/:userId', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { userId } = req.params;
     const requesterId = req.user?.id;
@@ -134,7 +134,7 @@ router.get('/user/:userId', optionalAuthMiddleware, async (req: Request, res: Re
  * POST /articles
  * Create a new article
  */
-router.post('/', authMiddleware, async (req: Request, res: Response) => {
+router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parseResult = createArticleSchema.safeParse(req.body);
     if (!parseResult.success) {
@@ -158,7 +158,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
  * GET /articles/:idOrSlug
  * Get article by ID or slug
  */
-router.get('/:idOrSlug', optionalAuthMiddleware, async (req: Request, res: Response) => {
+router.get('/:idOrSlug', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { idOrSlug } = req.params;
     const userId = req.user?.id;
@@ -191,7 +191,7 @@ router.get('/:idOrSlug', optionalAuthMiddleware, async (req: Request, res: Respo
  * PATCH /articles/:id
  * Update an article
  */
-router.patch('/:id', authMiddleware, async (req: Request, res: Response) => {
+router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const parseResult = updateArticleSchema.safeParse(req.body);
@@ -216,7 +216,7 @@ router.patch('/:id', authMiddleware, async (req: Request, res: Response) => {
  * PATCH /articles/:id/status
  * Update article status
  */
-router.patch('/:id/status', authMiddleware, async (req: Request, res: Response) => {
+router.patch('/:id/status', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const parseResult = updateArticleStatusSchema.safeParse(req.body);
@@ -241,7 +241,7 @@ router.patch('/:id/status', authMiddleware, async (req: Request, res: Response) 
  * DELETE /articles/:id
  * Delete an article
  */
-router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
+router.delete('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const { id } = req.params;
     const userId = req.user!.id;

@@ -2,10 +2,11 @@
   "nav": {
     "home": "Inicio",
     "browse": "Explorar",
+    "articles": "Artículos",
     "generate": "Generar",
     "users": "Usuarios",
     "profile": "Perfil",
-    "signIn": "Iniciar sesión",
+    "signIn": "Iniciar Sesión",
     "admin": "Panel de Admin"
   },
   "hero": {
@@ -50,7 +51,11 @@
     "error": "Ha ocurrido un error",
     "noResults": "No se encontraron resultados",
     "save": "Guardar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "back": "Atrás",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página"
   },
   "auth": {
     "signIn": "Iniciar sesión",
@@ -133,6 +138,7 @@
     "adminOnly": "Esta página solo es accesible para administradores",
     "tabs": {
       "users": "Usuarios",
+      "articles": "Artículos",
       "content": "Contenido",
       "settings": "Configuración",
       "system": "Sistema"
@@ -259,6 +265,93 @@
       "backupDb": "Respaldar BD",
       "viewLogs": "Ver Logs",
       "restartServices": "Reiniciar Servicios"
+    },
+    "articles": {
+      "totalArticles": "Total de Artículos",
+      "manageArticles": "Gestionar Artículos",
+      "manageArticlesDesc": "Ver y gestionar todos los artículos de la plataforma",
+      "searchPlaceholder": "Buscar artículos...",
+      "filterByStatus": "Filtrar por estado",
+      "allStatuses": "Todos los estados",
+      "article": "Artículo",
+      "author": "Autor",
+      "status": "Estado",
+      "views": "Vistas",
+      "date": "Fecha",
+      "view": "Ver",
+      "unpublish": "Despublicar",
+      "statusUpdated": "Estado actualizado"
+    }
+  },
+  "articles": {
+    "title": "Artículos",
+    "subtitle": "Descubre guías, tutoriales e ideas de nuestra comunidad",
+    "create": "Escribir Artículo",
+    "createNew": "Nuevo Artículo",
+    "editArticle": "Editar Artículo",
+    "searchPlaceholder": "Buscar artículos...",
+    "allTags": "Todos",
+    "noArticles": "No se encontraron artículos",
+    "noArticlesDesc": "¡Sé el primero en compartir tu conocimiento con la comunidad!",
+    "totalArticles": "{{count}} artículos en total",
+    "views": "vistas",
+    "sort": {
+      "date": "Fecha",
+      "title": "Título",
+      "views": "Vistas",
+      "desc": "Más recientes",
+      "asc": "Más antiguos"
+    },
+    "status": {
+      "draft": "Borrador",
+      "published": "Publicado",
+      "private": "Privado"
+    },
+    "notFound": "Artículo no encontrado",
+    "notFoundDesc": "El artículo que buscas no existe o ha sido eliminado.",
+    "backToArticles": "Volver a Artículos",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "deleteConfirmTitle": "Eliminar Artículo",
+    "deleteConfirmDesc": "¿Estás seguro de que quieres eliminar este artículo? Esta acción no se puede deshacer.",
+    "deleted": "Artículo Eliminado",
+    "deletedDesc": "El artículo ha sido eliminado exitosamente.",
+    "deleteError": "Error al eliminar el artículo",
+    "writtenBy": "Escrito por",
+    "viewProfile": "Ver Perfil",
+    "titleLabel": "Título",
+    "titlePlaceholder": "Ingresa el título del artículo...",
+    "contentLabel": "Contenido",
+    "contentPlaceholder": "Comienza a escribir tu artículo...",
+    "statusLabel": "Estado",
+    "slugLabel": "URL Slug",
+    "slugPlaceholder": "url-del-articulo",
+    "slugHint": "Identificador amigable para la URL de tu artículo",
+    "headerImageLabel": "Imagen de Cabecera",
+    "headerImagePlaceholder": "Ingresa la URL de la imagen...",
+    "excerptLabel": "Extracto",
+    "excerptPlaceholder": "Breve descripción de tu artículo...",
+    "tagsLabel": "Etiquetas",
+    "tagPlaceholder": "Añadir etiqueta...",
+    "tagsHint": "{{count}} etiquetas restantes",
+    "saveDraft": "Guardar Borrador",
+    "publish": "Publicar",
+    "saved": "Artículo Guardado",
+    "savedDesc": "Tu artículo ha sido guardado exitosamente.",
+    "saveError": "Error al guardar el artículo",
+    "titleRequired": "El título es obligatorio",
+    "contentRequired": "El contenido es obligatorio",
+    "noPermission": "No tienes permiso para crear o editar artículos",
+    "editor": {
+      "placeholder": "Comienza a escribir tu artículo..."
+    },
+    "myArticles": "Mis Artículos",
+    "myArticlesDesc": "Gestiona tus artículos publicados y borradores",
+    "stats": {
+      "total": "Total",
+      "published": "Publicados",
+      "drafts": "Borradores",
+      "private": "Privados"
     }
   }
 }

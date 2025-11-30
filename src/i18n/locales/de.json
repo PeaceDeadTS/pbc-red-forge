@@ -2,6 +2,7 @@
   "nav": {
     "home": "Startseite",
     "browse": "Durchsuchen",
+    "articles": "Artikel",
     "generate": "Generieren",
     "users": "Benutzer",
     "profile": "Profil",
@@ -50,7 +51,11 @@
     "error": "Ein Fehler ist aufgetreten",
     "noResults": "Keine Ergebnisse gefunden",
     "save": "Speichern",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "back": "Zurück",
+    "previous": "Zurück",
+    "next": "Weiter",
+    "page": "Seite"
   },
   "auth": {
     "signIn": "Anmelden",
@@ -133,6 +138,7 @@
     "adminOnly": "Diese Seite ist nur für Administratoren zugänglich",
     "tabs": {
       "users": "Benutzer",
+      "articles": "Artikel",
       "content": "Inhalte",
       "settings": "Einstellungen",
       "system": "System"
@@ -259,6 +265,93 @@
       "backupDb": "Datenbank sichern",
       "viewLogs": "Logs anzeigen",
       "restartServices": "Dienste neustarten"
+    },
+    "articles": {
+      "totalArticles": "Artikel gesamt",
+      "manageArticles": "Artikel verwalten",
+      "manageArticlesDesc": "Alle Artikel auf der Plattform anzeigen und verwalten",
+      "searchPlaceholder": "Artikel suchen...",
+      "filterByStatus": "Nach Status filtern",
+      "allStatuses": "Alle Status",
+      "article": "Artikel",
+      "author": "Autor",
+      "status": "Status",
+      "views": "Aufrufe",
+      "date": "Datum",
+      "view": "Ansehen",
+      "unpublish": "Veröffentlichung aufheben",
+      "statusUpdated": "Status aktualisiert"
+    }
+  },
+  "articles": {
+    "title": "Artikel",
+    "subtitle": "Entdecken Sie Anleitungen, Tutorials und Einblicke aus unserer Community",
+    "create": "Artikel schreiben",
+    "createNew": "Neuer Artikel",
+    "editArticle": "Artikel bearbeiten",
+    "searchPlaceholder": "Artikel suchen...",
+    "allTags": "Alle",
+    "noArticles": "Keine Artikel gefunden",
+    "noArticlesDesc": "Seien Sie der Erste, der sein Wissen mit der Community teilt!",
+    "totalArticles": "{{count}} Artikel insgesamt",
+    "views": "Aufrufe",
+    "sort": {
+      "date": "Datum",
+      "title": "Titel",
+      "views": "Aufrufe",
+      "desc": "Neueste zuerst",
+      "asc": "Älteste zuerst"
+    },
+    "status": {
+      "draft": "Entwurf",
+      "published": "Veröffentlicht",
+      "private": "Privat"
+    },
+    "notFound": "Artikel nicht gefunden",
+    "notFoundDesc": "Der gesuchte Artikel existiert nicht oder wurde entfernt.",
+    "backToArticles": "Zurück zu Artikeln",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteConfirmTitle": "Artikel löschen",
+    "deleteConfirmDesc": "Sind Sie sicher, dass Sie diesen Artikel löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleted": "Artikel gelöscht",
+    "deletedDesc": "Der Artikel wurde erfolgreich gelöscht.",
+    "deleteError": "Artikel konnte nicht gelöscht werden",
+    "writtenBy": "Geschrieben von",
+    "viewProfile": "Profil ansehen",
+    "titleLabel": "Titel",
+    "titlePlaceholder": "Artikeltitel eingeben...",
+    "contentLabel": "Inhalt",
+    "contentPlaceholder": "Beginnen Sie mit dem Schreiben...",
+    "statusLabel": "Status",
+    "slugLabel": "URL-Slug",
+    "slugPlaceholder": "artikel-url-slug",
+    "slugHint": "URL-freundliche Kennung für Ihren Artikel",
+    "headerImageLabel": "Titelbild",
+    "headerImagePlaceholder": "Bild-URL eingeben...",
+    "excerptLabel": "Auszug",
+    "excerptPlaceholder": "Kurze Beschreibung Ihres Artikels...",
+    "tagsLabel": "Tags",
+    "tagPlaceholder": "Tag hinzufügen...",
+    "tagsHint": "{{count}} Tags verbleibend",
+    "saveDraft": "Entwurf speichern",
+    "publish": "Veröffentlichen",
+    "saved": "Artikel gespeichert",
+    "savedDesc": "Ihr Artikel wurde erfolgreich gespeichert.",
+    "saveError": "Artikel konnte nicht gespeichert werden",
+    "titleRequired": "Titel ist erforderlich",
+    "contentRequired": "Inhalt ist erforderlich",
+    "noPermission": "Sie haben keine Berechtigung, Artikel zu erstellen oder zu bearbeiten",
+    "editor": {
+      "placeholder": "Beginnen Sie mit dem Schreiben..."
+    },
+    "myArticles": "Meine Artikel",
+    "myArticlesDesc": "Verwalten Sie Ihre veröffentlichten Artikel und Entwürfe",
+    "stats": {
+      "total": "Gesamt",
+      "published": "Veröffentlicht",
+      "drafts": "Entwürfe",
+      "private": "Privat"
     }
   }
 }

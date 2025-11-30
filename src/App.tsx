@@ -15,6 +15,9 @@ const ModelDetail = lazy(() => import('./pages/ModelDetail'));
 const Generate = lazy(() => import('./pages/Generate'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Users = lazy(() => import('./pages/Users'));
+const Articles = lazy(() => import('./pages/Articles'));
+const ArticleDetail = lazy(() => import('./pages/ArticleDetail'));
+const ArticleEdit = lazy(() => import('./pages/ArticleEdit'));
 const Admin = lazy(() => import('./pages/admin/Admin'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 
@@ -45,6 +48,10 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/users" element={<Users />} />
+                <Route path="/articles" element={<Articles />} />
+                <Route path="/articles/new" element={<ArticleEdit />} />
+                <Route path="/articles/:slug" element={<ArticleDetail />} />
+                <Route path="/articles/:id/edit" element={<ArticleEdit />} />
                 <Route path="/admin" element={<Admin />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

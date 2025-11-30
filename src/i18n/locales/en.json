@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "browse": "Browse",
+    "articles": "Articles",
     "generate": "Generate",
     "users": "Users",
     "profile": "Profile",
@@ -96,7 +97,11 @@
     "error": "An error occurred",
     "noResults": "No results found",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page"
   },
   "language": {
     "select": "Select language",
@@ -133,9 +138,26 @@
     "adminOnly": "This page is only accessible to administrators",
     "tabs": {
       "users": "Users",
+      "articles": "Articles",
       "content": "Content",
       "settings": "Settings",
       "system": "System"
+    },
+    "articles": {
+      "totalArticles": "Total Articles",
+      "manageArticles": "Manage Articles",
+      "manageArticlesDesc": "View and manage all articles on the platform",
+      "searchPlaceholder": "Search articles...",
+      "filterByStatus": "Filter by status",
+      "allStatuses": "All statuses",
+      "article": "Article",
+      "author": "Author",
+      "status": "Status",
+      "views": "Views",
+      "date": "Date",
+      "view": "View",
+      "unpublish": "Unpublish",
+      "statusUpdated": "Status updated"
     },
     "users": {
       "totalUsers": "Total Users",
@@ -259,6 +281,77 @@
       "backupDb": "Backup Database",
       "viewLogs": "View Logs",
       "restartServices": "Restart Services"
+    }
+  },
+  "articles": {
+    "title": "Articles",
+    "subtitle": "Discover guides, tutorials, and insights from our community",
+    "create": "Write Article",
+    "createNew": "New Article",
+    "editArticle": "Edit Article",
+    "searchPlaceholder": "Search articles...",
+    "allTags": "All",
+    "noArticles": "No articles found",
+    "noArticlesDesc": "Be the first to share your knowledge with the community!",
+    "totalArticles": "{{count}} articles total",
+    "views": "views",
+    "sort": {
+      "date": "Date",
+      "title": "Title",
+      "views": "Views",
+      "desc": "Newest first",
+      "asc": "Oldest first"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published",
+      "private": "Private"
+    },
+    "notFound": "Article not found",
+    "notFoundDesc": "The article you're looking for doesn't exist or has been removed.",
+    "backToArticles": "Back to Articles",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleteConfirmTitle": "Delete Article",
+    "deleteConfirmDesc": "Are you sure you want to delete this article? This action cannot be undone.",
+    "deleted": "Article Deleted",
+    "deletedDesc": "The article has been successfully deleted.",
+    "deleteError": "Failed to delete article",
+    "writtenBy": "Written by",
+    "viewProfile": "View Profile",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Enter article title...",
+    "contentLabel": "Content",
+    "contentPlaceholder": "Start writing your article...",
+    "statusLabel": "Status",
+    "slugLabel": "URL Slug",
+    "slugPlaceholder": "article-url-slug",
+    "slugHint": "URL-friendly identifier for your article",
+    "headerImageLabel": "Header Image",
+    "headerImagePlaceholder": "Enter image URL...",
+    "excerptLabel": "Excerpt",
+    "excerptPlaceholder": "Brief description of your article...",
+    "tagsLabel": "Tags",
+    "tagPlaceholder": "Add tag...",
+    "tagsHint": "{{count}} tags remaining",
+    "saveDraft": "Save Draft",
+    "publish": "Publish",
+    "saved": "Article Saved",
+    "savedDesc": "Your article has been saved successfully.",
+    "saveError": "Failed to save article",
+    "titleRequired": "Title is required",
+    "contentRequired": "Content is required",
+    "noPermission": "You don't have permission to create or edit articles",
+    "editor": {
+      "placeholder": "Start writing your article..."
+    },
+    "myArticles": "My Articles",
+    "myArticlesDesc": "Manage your published and draft articles",
+    "stats": {
+      "total": "Total",
+      "published": "Published",
+      "drafts": "Drafts",
+      "private": "Private"
     }
   }
 }

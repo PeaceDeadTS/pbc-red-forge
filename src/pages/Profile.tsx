@@ -10,9 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
-import { usersApi } from '@/lib/api';
+import { usersApi, articlesApi } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 import { AuthModal } from '@/components/auth';
+import { UserArticles } from '@/components/UserArticles';
 import type { User as UserType } from '@/types/auth';
 
 const Profile = () => {
@@ -33,6 +34,7 @@ const Profile = () => {
     display_name: '',
     bio: '',
   });
+  const [canCreateArticles, setCanCreateArticles] = useState(false);
 
   // Determine which profile to show
   const targetUserId = id || currentUser?.id;
@@ -63,6 +65,23 @@ const Profile = () => {
       fetchProfile();
     }
   }, [targetUserId, authLoading]);
+
+  // Check if user can create articles
+  useEffect(() => {
+    const checkCanCreate = async () => {
+      if (!isAuthenticated || !isOwner) {
+        setCanCreateArticles(false);
+        return;
+      }
+      try {
+        const res = await articlesApi.canCreate();
+        setCanCreateArticles(res.data.canCreate);
+      } catch {
+        setCanCreateArticles(false);
+      }
+    };
+    checkCanCreate();
+  }, [isAuthenticated, isOwner]);
 
   const handleSaveProfile = async () => {
     setIsSaving(true);
@@ -261,6 +280,17 @@ const Profile = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* User Articles Section */}
+          {profileUser && (
+            <div className="mt-6">
+              <UserArticles
+                userId={profileUser.id}
+                isOwner={isOwner}
+                canCreate={canCreateArticles}
+              />
+            </div>
+          )}
         </motion.div>
       </div>
     </div>

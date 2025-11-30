@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, LogOut, Users, Shield } from 'lucide-react';
+import { Sparkles, Home, Grid3x3, Wand2, User, Menu, X, LogOut, Users, Shield, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -21,6 +21,7 @@ export const Navigation = () => {
   const navItems = [
     { path: '/', label: t('nav.home'), icon: Home },
     { path: '/browse', label: t('nav.browse'), icon: Grid3x3 },
+    { path: '/articles', label: t('nav.articles'), icon: FileText },
     { path: '/generate', label: t('nav.generate'), icon: Wand2 },
     { path: '/users', label: t('nav.users'), icon: Users },
   ];

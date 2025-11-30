@@ -2,6 +2,7 @@
   "nav": {
     "home": "Главная",
     "browse": "Обзор",
+    "articles": "Статьи",
     "generate": "Генерация",
     "users": "Пользователи",
     "profile": "Профиль",
@@ -96,7 +97,11 @@
     "error": "Произошла ошибка",
     "noResults": "Результаты не найдены",
     "save": "Сохранить",
-    "cancel": "Отмена"
+    "cancel": "Отмена",
+    "back": "Назад",
+    "previous": "Назад",
+    "next": "Далее",
+    "page": "Страница"
   },
   "language": {
     "select": "Выбрать язык",
@@ -133,9 +138,26 @@
     "adminOnly": "Эта страница доступна только администраторам",
     "tabs": {
       "users": "Пользователи",
+      "articles": "Статьи",
       "content": "Контент",
       "settings": "Настройки",
       "system": "Система"
+    },
+    "articles": {
+      "totalArticles": "Всего статей",
+      "manageArticles": "Управление статьями",
+      "manageArticlesDesc": "Просмотр и управление всеми статьями на платформе",
+      "searchPlaceholder": "Поиск статей...",
+      "filterByStatus": "Фильтр по статусу",
+      "allStatuses": "Все статусы",
+      "article": "Статья",
+      "author": "Автор",
+      "status": "Статус",
+      "views": "Просмотры",
+      "date": "Дата",
+      "view": "Просмотр",
+      "unpublish": "Снять с публикации",
+      "statusUpdated": "Статус обновлён"
     },
     "users": {
       "totalUsers": "Всего пользователей",
@@ -259,6 +281,77 @@
       "backupDb": "Резервная копия БД",
       "viewLogs": "Просмотр логов",
       "restartServices": "Перезапуск сервисов"
+    }
+  },
+  "articles": {
+    "title": "Статьи",
+    "subtitle": "Гайды, туториалы и полезные материалы от нашего сообщества",
+    "create": "Написать статью",
+    "createNew": "Новая статья",
+    "editArticle": "Редактировать статью",
+    "searchPlaceholder": "Поиск статей...",
+    "allTags": "Все",
+    "noArticles": "Статьи не найдены",
+    "noArticlesDesc": "Станьте первым, кто поделится знаниями с сообществом!",
+    "totalArticles": "Всего {{count}} статей",
+    "views": "просмотров",
+    "sort": {
+      "date": "Дата",
+      "title": "Название",
+      "views": "Просмотры",
+      "desc": "Сначала новые",
+      "asc": "Сначала старые"
+    },
+    "status": {
+      "draft": "Черновик",
+      "published": "Опубликовано",
+      "private": "Приватная"
+    },
+    "notFound": "Статья не найдена",
+    "notFoundDesc": "Статья, которую вы ищете, не существует или была удалена.",
+    "backToArticles": "К списку статей",
+    "edit": "Редактировать",
+    "delete": "Удалить",
+    "deleteConfirmTitle": "Удалить статью",
+    "deleteConfirmDesc": "Вы уверены, что хотите удалить эту статью? Это действие нельзя отменить.",
+    "deleted": "Статья удалена",
+    "deletedDesc": "Статья успешно удалена.",
+    "deleteError": "Не удалось удалить статью",
+    "writtenBy": "Автор",
+    "viewProfile": "Профиль автора",
+    "titleLabel": "Заголовок",
+    "titlePlaceholder": "Введите заголовок статьи...",
+    "contentLabel": "Содержание",
+    "contentPlaceholder": "Начните писать статью...",
+    "statusLabel": "Статус",
+    "slugLabel": "URL-идентификатор",
+    "slugPlaceholder": "url-identifikator-stati",
+    "slugHint": "URL-адрес для вашей статьи",
+    "headerImageLabel": "Изображение-обложка",
+    "headerImagePlaceholder": "Введите URL изображения...",
+    "excerptLabel": "Краткое описание",
+    "excerptPlaceholder": "Краткое описание вашей статьи...",
+    "tagsLabel": "Теги",
+    "tagPlaceholder": "Добавить тег...",
+    "tagsHint": "Осталось {{count}} тегов",
+    "saveDraft": "Сохранить черновик",
+    "publish": "Опубликовать",
+    "saved": "Статья сохранена",
+    "savedDesc": "Ваша статья успешно сохранена.",
+    "saveError": "Не удалось сохранить статью",
+    "titleRequired": "Заголовок обязателен",
+    "contentRequired": "Содержание обязательно",
+    "noPermission": "У вас нет прав для создания или редактирования статей",
+    "editor": {
+      "placeholder": "Начните писать статью..."
+    },
+    "myArticles": "Мои статьи",
+    "myArticlesDesc": "Управление опубликованными статьями и черновиками",
+    "stats": {
+      "total": "Всего",
+      "published": "Опубликовано",
+      "drafts": "Черновики",
+      "private": "Приватные"
     }
   }
 }

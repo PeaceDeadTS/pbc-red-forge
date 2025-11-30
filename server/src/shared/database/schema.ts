@@ -46,6 +46,13 @@ const ALL_RIGHTS = [
   'delete_any_content',
   'upload_files',
   'publish_content',
+  // Article rights
+  'create_articles',
+  'edit_own_articles',
+  'edit_any_articles',
+  'delete_own_articles',
+  'delete_any_articles',
+  'publish_articles',
   // User rights
   'read_content',
   'comment',
@@ -56,6 +63,7 @@ const ALL_RIGHTS = [
   'manage_groups',
   'manage_rights',
   'view_admin_panel',
+  'manage_articles',
   // Wildcard (all rights)
   '*',
 ];
@@ -145,6 +153,42 @@ export const ensureSchema = async (): Promise<void> => {
       FOREIGN KEY (assigned_by) REFERENCES users(id) ON DELETE SET NULL,
       INDEX idx_user_id (user_id),
       INDEX idx_group_id (group_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+
+  // Articles table
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS articles (
+      id VARCHAR(36) PRIMARY KEY,
+      author_id VARCHAR(36) NOT NULL,
+      title VARCHAR(200) NOT NULL,
+      slug VARCHAR(200) UNIQUE NOT NULL,
+      header_image VARCHAR(500),
+      excerpt VARCHAR(500),
+      content LONGTEXT NOT NULL,
+      status ENUM('draft', 'published', 'private') DEFAULT 'draft',
+      views INT UNSIGNED DEFAULT 0,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      published_at TIMESTAMP NULL,
+      FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+      INDEX idx_author_id (author_id),
+      INDEX idx_slug (slug),
+      INDEX idx_status (status),
+      INDEX idx_created_at (created_at),
+      INDEX idx_published_at (published_at),
+      FULLTEXT idx_search (title, excerpt)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+
+  // Article tags table
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS article_tags (
+      article_id VARCHAR(36) NOT NULL,
+      tag VARCHAR(50) NOT NULL,
+      PRIMARY KEY (article_id, tag),
+      FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+      INDEX idx_tag (tag)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 

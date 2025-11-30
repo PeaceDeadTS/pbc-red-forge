@@ -9,6 +9,7 @@ import { testConnection, ensureSchema } from './shared/index.js';
 // Feature modules
 import { authRoutes } from './modules/auth/index.js';
 import { usersRoutes } from './modules/users/index.js';
+import { articlesRoutes } from './modules/articles/index.js';
 import { generationRoutes } from './modules/generation/index.js';
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.set('trust proxy', 1);
 // Routes - Feature modules
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', usersRoutes);
+app.use('/api/v1/articles', articlesRoutes);
 app.use('/api/v1/generation', generationRoutes);
 
 // Health check

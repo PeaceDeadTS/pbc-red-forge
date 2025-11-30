@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Shield, Users, FileText, Settings, Activity, AlertTriangle } from 'lucide-react';
+import { Shield, Users, FileText, Settings, Activity, AlertTriangle, BookOpen } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { AdminUsersTab } from './components/AdminUsersTab';
 import { AdminContentTab } from './components/AdminContentTab';
+import { AdminArticlesTab } from './components/AdminArticlesTab';
 import { AdminSettingsTab } from './components/AdminSettingsTab';
 import { AdminSystemTab } from './components/AdminSystemTab';
 
@@ -77,10 +78,14 @@ const Admin = () => {
           transition={{ delay: 0.1 }}
         >
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4 lg:w-auto lg:inline-grid">
+            <TabsList className="grid w-full grid-cols-5 lg:w-auto lg:inline-grid">
               <TabsTrigger value="users" className="gap-2">
                 <Users className="h-4 w-4" />
                 <span className="hidden sm:inline">{t('admin.tabs.users')}</span>
+              </TabsTrigger>
+              <TabsTrigger value="articles" className="gap-2">
+                <BookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">{t('admin.tabs.articles')}</span>
               </TabsTrigger>
               <TabsTrigger value="content" className="gap-2">
                 <FileText className="h-4 w-4" />
@@ -98,6 +103,10 @@ const Admin = () => {
 
             <TabsContent value="users">
               <AdminUsersTab />
+            </TabsContent>
+
+            <TabsContent value="articles">
+              <AdminArticlesTab />
             </TabsContent>
 
             <TabsContent value="content">

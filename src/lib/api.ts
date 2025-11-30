@@ -104,3 +104,67 @@ export const adminApi = {
   resolveReport: (reportId: string, action: string, notes?: string) =>
     api.post(`/admin/reports/${reportId}/resolve`, { action, notes }),
 };
+
+// Articles API
+export const articlesApi = {
+  // Get list of articles
+  getArticles: (params?: {
+    sort?: string;
+    order?: string;
+    limit?: number;
+    offset?: number;
+    status?: string;
+    author_id?: string;
+    tag?: string;
+    search?: string;
+  }) => api.get('/articles', { params }),
+
+  // Get all tags
+  getTags: () => api.get('/articles/tags'),
+
+  // Get current user's articles
+  getMyArticles: (params?: { sort?: string; order?: string; limit?: number; offset?: number }) =>
+    api.get('/articles/my', { params }),
+
+  // Get current user's article stats
+  getMyStats: () => api.get('/articles/my/stats'),
+
+  // Check if user can create articles
+  canCreate: () => api.get('/articles/can-create'),
+
+  // Get articles by user ID
+  getUserArticles: (userId: string, params?: { sort?: string; order?: string; limit?: number; offset?: number }) =>
+    api.get(`/articles/user/${userId}`, { params }),
+
+  // Get single article by ID or slug
+  getArticle: (idOrSlug: string) => api.get(`/articles/${idOrSlug}`),
+
+  // Create new article
+  create: (data: {
+    title: string;
+    slug?: string;
+    header_image?: string | null;
+    excerpt?: string | null;
+    content: string;
+    tags?: string[];
+    status?: string;
+  }) => api.post('/articles', data),
+
+  // Update article
+  update: (id: string, data: {
+    title?: string;
+    slug?: string;
+    header_image?: string | null;
+    excerpt?: string | null;
+    content?: string;
+    tags?: string[];
+    status?: string;
+  }) => api.patch(`/articles/${id}`, data),
+
+  // Update article status
+  updateStatus: (id: string, status: string) =>
+    api.patch(`/articles/${id}/status`, { status }),
+
+  // Delete article
+  delete: (id: string) => api.delete(`/articles/${id}`),
+};

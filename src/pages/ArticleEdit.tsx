@@ -112,13 +112,21 @@ const ArticleEdit = () => {
 
   // Auto-generate slug from title
   const generateSlug = (text: string) => {
-    return text
+    const base = text
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim()
-      .slice(0, 100);
+      .trim();
+
+    const normalized = base.length === 0 ? 'article' : base;
+
+    const minLengthSlug =
+      normalized.length >= 3
+        ? normalized
+        : normalized.repeat(Math.ceil(3 / normalized.length)).slice(0, 3);
+
+    return minLengthSlug.slice(0, 100);
   };
 
   const handleTitleChange = (value: string) => {
@@ -161,6 +169,15 @@ const ArticleEdit = () => {
       toast({
         title: t('common.error'),
         description: t('articles.contentRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (slug && slug.length < 3) {
+      toast({
+        title: t('common.error'),
+        description: t('articles.slugTooShort'),
         variant: 'destructive',
       });
       return;

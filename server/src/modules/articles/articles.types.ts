@@ -12,7 +12,7 @@ export type ArticleStatusType = (typeof ArticleStatus)[keyof typeof ArticleStatu
 // Validation schemas
 export const createArticleSchema = z.object({
   title: z.string().min(1).max(200),
-  slug: z.string().min(1).max(200).regex(/^[a-z0-9-]+$/).optional(),
+  slug: z.string().min(3).max(200).regex(/^[a-z0-9-]+$/).optional(),
   header_image: z.string().url().max(500).optional().nullable(),
   excerpt: z.string().max(500).optional().nullable(),
   content: z.string().min(1), // JSON content from TipTap editor

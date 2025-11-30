@@ -10,6 +10,7 @@ import { testConnection, ensureSchema } from './shared/index.js';
 import { authRoutes } from './modules/auth/index.js';
 import { usersRoutes } from './modules/users/index.js';
 import { articlesRoutes } from './modules/articles/index.js';
+import { tagsRoutes } from './modules/tags/index.js';
 import { reactionsRoutes } from './modules/reactions/index.js';
 import { generationRoutes } from './modules/generation/index.js';
 
@@ -33,6 +34,7 @@ app.set('trust proxy', 1);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', usersRoutes);
 app.use('/api/v1/articles', articlesRoutes);
+app.use('/api/v1/tags', tagsRoutes);
 app.use('/api/v1/reactions', reactionsRoutes);
 app.use('/api/v1/generation', generationRoutes);
 

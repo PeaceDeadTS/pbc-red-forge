@@ -327,6 +327,7 @@
     "slugLabel": "URL Slug",
     "slugPlaceholder": "article-url-slug",
     "slugHint": "URL-friendly identifier for your article",
+    "slugTooShort": "URL slug must be at least 3 characters",
     "headerImageLabel": "Header Image",
     "headerImagePlaceholder": "Enter image URL...",
     "excerptLabel": "Excerpt",

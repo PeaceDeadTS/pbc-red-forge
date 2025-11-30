@@ -327,6 +327,7 @@
     "slugLabel": "URL-Slug",
     "slugPlaceholder": "artikel-url-slug",
     "slugHint": "URL-freundliche Kennung für Ihren Artikel",
+    "slugTooShort": "Der URL-Slug muss mindestens 3 Zeichen lang sein",
     "headerImageLabel": "Titelbild",
     "headerImagePlaceholder": "Bild-URL eingeben...",
     "excerptLabel": "Auszug",

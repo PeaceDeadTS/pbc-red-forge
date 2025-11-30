@@ -183,12 +183,15 @@ export const ensureSchema = async (): Promise<void> => {
 
   // Article tags table
   await pool.execute(`
-    CREATE TABLE IF NOT EXISTS article_tags (
-      article_id VARCHAR(36) NOT NULL,
+    CREATE TABLE IF NOT EXISTS tags (
+      id VARCHAR(36) PRIMARY KEY,
+      target_type ENUM('article') NOT NULL,
+      target_id VARCHAR(36) NOT NULL,
       tag VARCHAR(50) NOT NULL,
-      PRIMARY KEY (article_id, tag),
-      FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
-      INDEX idx_tag (tag)
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uniq_target_tag (target_type, target_id, tag),
+      INDEX idx_tag (tag),
+      INDEX idx_target (target_type, target_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 

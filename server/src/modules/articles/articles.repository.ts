@@ -23,11 +23,6 @@ export interface ArticleWithAuthorRow extends ArticleRow {
   author_avatar_url: string | null;
 }
 
-export interface ArticleTagRow extends RowDataPacket {
-  article_id: string;
-  tag: string;
-}
-
 export interface CountRow extends RowDataPacket {
   total: number;
 }
@@ -63,61 +58,6 @@ export const articlesRepository = {
         publishedAt,
       ]
     );
-  },
-
-  /**
-   * Add tags to article
-   */
-  async addTags(articleId: string, tags: string[]): Promise<void> {
-    if (tags.length === 0) return;
-    
-    const values = tags.map((tag) => [articleId, tag.toLowerCase().trim()]);
-    const placeholders = values.map(() => '(?, ?)').join(', ');
-    const flatValues = values.flat();
-    
-    await pool.execute(
-      `INSERT IGNORE INTO article_tags (article_id, tag) VALUES ${placeholders}`,
-      flatValues
-    );
-  },
-
-  /**
-   * Remove all tags from article
-   */
-  async removeTags(articleId: string): Promise<void> {
-    await pool.execute('DELETE FROM article_tags WHERE article_id = ?', [articleId]);
-  },
-
-  /**
-   * Get tags for article
-   */
-  async getTags(articleId: string): Promise<string[]> {
-    const [rows] = await pool.execute<ArticleTagRow[]>(
-      'SELECT tag FROM article_tags WHERE article_id = ?',
-      [articleId]
-    );
-    return rows.map((r: ArticleTagRow) => r.tag);
-  },
-
-  /**
-   * Get tags for multiple articles
-   */
-  async getTagsForArticles(articleIds: string[]): Promise<Map<string, string[]>> {
-    if (articleIds.length === 0) return new Map();
-    
-    const placeholders = articleIds.map(() => '?').join(',');
-    const [rows] = await pool.execute<ArticleTagRow[]>(
-      `SELECT article_id, tag FROM article_tags WHERE article_id IN (${placeholders})`,
-      articleIds
-    );
-    
-    const tagsMap = new Map<string, string[]>();
-    for (const row of rows) {
-      const existing = tagsMap.get(row.article_id) || [];
-      existing.push(row.tag);
-      tagsMap.set(row.article_id, existing);
-    }
-    return tagsMap;
   },
 
   /**
@@ -264,7 +204,9 @@ export const articlesRepository = {
 
     // Tag filter
     if (query.tag) {
-      conditions.push('EXISTS (SELECT 1 FROM article_tags at WHERE at.article_id = a.id AND at.tag = ?)');
+      conditions.push(
+        "EXISTS (SELECT 1 FROM tags t WHERE t.target_type = 'article' AND t.target_id = a.id AND t.tag = ?)"
+      );
       params.push(query.tag.toLowerCase());
     }
 
@@ -324,7 +266,9 @@ export const articlesRepository = {
     }
 
     if (query.tag) {
-      conditions.push('EXISTS (SELECT 1 FROM article_tags at WHERE at.article_id = a.id AND at.tag = ?)');
+      conditions.push(
+        "EXISTS (SELECT 1 FROM tags t WHERE t.target_type = 'article' AND t.target_id = a.id AND t.tag = ?)"
+      );
       params.push(query.tag.toLowerCase());
     }
 
@@ -364,22 +308,5 @@ export const articlesRepository = {
       drafts: Number(rows[0].drafts) || 0,
       private: Number(rows[0].private_count) || 0,
     };
-  },
-
-  /**
-   * Get all unique tags with counts
-   */
-  async getAllTags(): Promise<{ tag: string; count: number }[]> {
-    const [rows] = await pool.execute<RowDataPacket[]>(
-      `SELECT at.tag, COUNT(*) as count
-       FROM article_tags at
-       JOIN articles a ON at.article_id = a.id
-       WHERE a.status = 'published'
-       GROUP BY at.tag
-       ORDER BY count DESC, at.tag ASC
-       LIMIT 100`
-    );
-    
-    return rows.map((r: RowDataPacket) => ({ tag: r.tag as string, count: Number(r.count) }));
   },
 };

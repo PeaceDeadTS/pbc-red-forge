@@ -11,18 +11,27 @@ import {
   ArticleStatusType,
 } from './articles.types.js';
 import { usersRepository } from '../users/users.repository.js';
+import { tagsService } from '../tags/index.js';
 
 /**
  * Generate URL-friendly slug from title
  */
 const generateSlug = (title: string): string => {
-  return title
+  const base = title
     .toLowerCase()
     .replace(/[^\w\s-]/g, '') // Remove special characters
     .replace(/\s+/g, '-') // Replace spaces with hyphens
     .replace(/-+/g, '-') // Replace multiple hyphens with single
-    .trim()
-    .slice(0, 100);
+    .trim();
+
+  const normalized = base.length === 0 ? 'article' : base;
+
+  const minLengthSlug =
+    normalized.length >= 3
+      ? normalized
+      : normalized.repeat(Math.ceil(3 / normalized.length)).slice(0, 3);
+
+  return minLengthSlug.slice(0, 100);
 };
 
 /**
@@ -84,9 +93,9 @@ export const articlesService = {
       status: input.status || 'draft',
     });
 
-    // Add tags if provided
+    // Set tags if provided
     if (input.tags && input.tags.length > 0) {
-      await articlesRepository.addTags(id, input.tags);
+      await tagsService.setTags('article', id, input.tags);
     }
 
     // Fetch and return the created article
@@ -114,8 +123,12 @@ export const articlesService = {
       throw new ArticlesError('You do not have permission to edit this article', 403);
     }
 
-    // Validate slug uniqueness if changing
+    // Validate slug rules and uniqueness if changing
     if (input.slug && input.slug !== article.slug) {
+      if (input.slug.length < 3) {
+        throw new ArticlesError('Slug must be at least 3 characters long', 400);
+      }
+
       const slugExists = await articlesRepository.slugExists(input.slug, articleId);
       if (slugExists) {
         throw new ArticlesError('This slug is already in use', 400);
@@ -133,10 +146,7 @@ export const articlesService = {
 
     // Update tags if provided
     if (input.tags !== undefined) {
-      await articlesRepository.removeTags(articleId);
-      if (input.tags.length > 0) {
-        await articlesRepository.addTags(articleId, input.tags);
-      }
+      await tagsService.setTags('article', articleId, input.tags);
     }
 
     const updated = await this.getById(articleId, userId);
@@ -187,6 +197,9 @@ export const articlesService = {
       throw new ArticlesError('You do not have permission to delete this article', 403);
     }
 
+    // Remove all tags for this article from tags module
+    await tagsService.deleteAllForTarget('article', articleId);
+
     await articlesRepository.delete(articleId);
   },
 
@@ -211,7 +224,7 @@ export const articlesService = {
       }
     }
 
-    const tags = await articlesRepository.getTags(articleId);
+    const tags = await tagsService.getTags('article', articleId);
 
     const baseViews = article.views ?? 0;
 
@@ -265,7 +278,7 @@ export const articlesService = {
       await articlesRepository.incrementViews(article.id);
     }
 
-    const tags = await articlesRepository.getTags(article.id);
+    const tags = await tagsService.getTags('article', article.id);
 
     const baseViews = article.views ?? 0;
 
@@ -304,7 +317,7 @@ export const articlesService = {
 
     // Get tags for all articles
     const articleIds = articles.map((a) => a.id);
-    const tagsMap = await articlesRepository.getTagsForArticles(articleIds);
+    const tagsMap = await tagsService.getTagsForTargets('article', articleIds);
 
     const items: ArticleListItem[] = articles.map((article) => ({
       id: article.id,
@@ -346,7 +359,7 @@ export const articlesService = {
    * Get all tags
    */
   async getAllTags(): Promise<{ tag: string; count: number }[]> {
-    return articlesRepository.getAllTags();
+    return tagsService.getAllTagsForArticles();
   },
 
   /**

@@ -327,6 +327,7 @@
     "slugLabel": "URL-идентификатор",
     "slugPlaceholder": "url-identifikator-stati",
     "slugHint": "URL-адрес для вашей статьи",
+    "slugTooShort": "URL-идентификатор должен содержать минимум 3 символа",
     "headerImageLabel": "Изображение-обложка",
     "headerImagePlaceholder": "Введите URL изображения...",
     "excerptLabel": "Краткое описание",

@@ -42,6 +42,18 @@ export const getArticlesQuerySchema = z.object({
   status: z.enum(['draft', 'published', 'private', 'all']).optional(),
   author_id: z.string().uuid().optional(),
   tag: z.string().max(50).optional(),
+  include_tags: z
+    .union([
+      z.string().max(50),
+      z.array(z.string().max(50)).max(10),
+    ])
+    .optional(),
+  exclude_tags: z
+    .union([
+      z.string().max(50),
+      z.array(z.string().max(50)).max(10),
+    ])
+    .optional(),
   search: z.string().max(100).optional(),
 });
 

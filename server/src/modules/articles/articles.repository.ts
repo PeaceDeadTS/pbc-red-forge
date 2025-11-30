@@ -2,6 +2,12 @@ import { pool } from '../../shared/index.js';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { ArticleStatusType, GetArticlesQuery } from './articles.types.js';
 
+const normalizeTagFilter = (value?: string | string[]): string[] => {
+  if (!value) return [];
+  const arr = Array.isArray(value) ? value : [value];
+  return arr.map((t) => t.toLowerCase());
+};
+
 export interface ArticleRow extends RowDataPacket {
   id: string;
   author_id: string;
@@ -202,12 +208,41 @@ export const articlesRepository = {
       params.push(query.author_id);
     }
 
-    // Tag filter
-    if (query.tag) {
+    // Tag filters (include/exclude)
+    const includeTags =
+      query.include_tags !== undefined
+        ? normalizeTagFilter(query.include_tags)
+        : normalizeTagFilter(query.tag ? [query.tag] : undefined);
+    const excludeTags = normalizeTagFilter(query.exclude_tags);
+
+    if (includeTags.length > 0) {
+      const placeholders = includeTags.map(() => '?').join(', ');
       conditions.push(
-        "EXISTS (SELECT 1 FROM tags t WHERE t.target_type = 'article' AND t.target_id = a.id AND t.tag = ?)"
+        `EXISTS (
+           SELECT 1
+           FROM tags t
+           WHERE t.target_type = 'article'
+             AND t.target_id = a.id
+             AND t.tag IN (${placeholders})
+           GROUP BY t.target_id
+           HAVING COUNT(DISTINCT t.tag) = ?
+         )`
       );
-      params.push(query.tag.toLowerCase());
+      params.push(...includeTags, includeTags.length);
+    }
+
+    if (excludeTags.length > 0) {
+      const placeholders = excludeTags.map(() => '?').join(', ');
+      conditions.push(
+        `NOT EXISTS (
+           SELECT 1
+           FROM tags t
+           WHERE t.target_type = 'article'
+             AND t.target_id = a.id
+             AND t.tag IN (${placeholders})
+         )`
+      );
+      params.push(...excludeTags);
     }
 
     // Search filter
@@ -265,11 +300,39 @@ export const articlesRepository = {
       params.push(query.author_id);
     }
 
-    if (query.tag) {
+    // Tag filters (include/exclude)
+    const includeTagsSource = query.include_tags ?? (query.tag ? [query.tag] : undefined);
+    const includeTags = includeTagsSource?.map((t) => t.toLowerCase()) ?? [];
+    const excludeTags = (query.exclude_tags ?? []).map((t) => t.toLowerCase());
+
+    if (includeTags.length > 0) {
+      const placeholders = includeTags.map(() => '?').join(', ');
       conditions.push(
-        "EXISTS (SELECT 1 FROM tags t WHERE t.target_type = 'article' AND t.target_id = a.id AND t.tag = ?)"
+        `EXISTS (
+           SELECT 1
+           FROM tags t
+           WHERE t.target_type = 'article'
+             AND t.target_id = a.id
+             AND t.tag IN (${placeholders})
+           GROUP BY t.target_id
+           HAVING COUNT(DISTINCT t.tag) = ?
+         )`
       );
-      params.push(query.tag.toLowerCase());
+      params.push(...includeTags, includeTags.length);
+    }
+
+    if (excludeTags.length > 0) {
+      const placeholders = excludeTags.map(() => '?').join(', ');
+      conditions.push(
+        `NOT EXISTS (
+           SELECT 1
+           FROM tags t
+           WHERE t.target_type = 'article'
+             AND t.target_id = a.id
+             AND t.tag IN (${placeholders})
+         )`
+      );
+      params.push(...excludeTags);
     }
 
     if (query.search) {

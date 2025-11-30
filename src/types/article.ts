@@ -74,6 +74,8 @@ export interface GetArticlesParams {
   status?: ArticleStatus | 'all';
   author_id?: string;
   tag?: string;
+  include_tags?: string[];
+  exclude_tags?: string[];
   search?: string;
 }
 

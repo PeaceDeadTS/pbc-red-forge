@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { FileText, Plus, Search, Filter, Loader2, Tag } from 'lucide-react';
@@ -15,6 +15,7 @@ import type { ArticleListItem, TagWithCount } from '@/types/article';
 const Articles = () => {
   const { t } = useTranslation();
   const { user, isAuthenticated } = useAuth();
+  const [searchParams] = useSearchParams();
 
   const [articles, setArticles] = useState<ArticleListItem[]>([]);
   const [tags, setTags] = useState<TagWithCount[]>([]);
@@ -24,13 +25,35 @@ const Articles = () => {
 
   // Filters
   const [search, setSearch] = useState('');
-  const [selectedTag, setSelectedTag] = useState<string>('');
+  const [tagFilters, setTagFilters] = useState<Record<string, 'include' | 'exclude'>>({});
   const [sortBy, setSortBy] = useState<string>('created_at');
   const [sortOrder, setSortOrder] = useState<string>('desc');
 
   // Pagination
   const [page, setPage] = useState(1);
   const limit = 20;
+
+  const includeTags = Object.entries(tagFilters)
+    .filter(([, mode]) => mode === 'include')
+    .map(([tag]) => tag);
+
+  const excludeTags = Object.entries(tagFilters)
+    .filter(([, mode]) => mode === 'exclude')
+    .map(([tag]) => tag);
+
+  // Инициализация include-фильтра из ?tag= при переходе со страницы статьи
+  useEffect(() => {
+    const tagFromQuery = searchParams.get('tag');
+    if (!tagFromQuery) return;
+
+    setTagFilters((prev) => {
+      if (Object.keys(prev).length === 1 && prev[tagFromQuery] === 'include') {
+        return prev;
+      }
+      return { [tagFromQuery]: 'include' };
+    });
+    setPage(1);
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,7 +65,8 @@ const Articles = () => {
             order: sortOrder,
             limit,
             offset: (page - 1) * limit,
-            tag: selectedTag || undefined,
+            include_tags: includeTags.length > 0 ? includeTags : undefined,
+            exclude_tags: excludeTags.length > 0 ? excludeTags : undefined,
             search: search || undefined,
           }),
           articlesApi.getTags(),
@@ -59,7 +83,7 @@ const Articles = () => {
     };
 
     fetchData();
-  }, [page, sortBy, sortOrder, selectedTag, search]);
+  }, [page, sortBy, sortOrder, search, includeTags.join(','), excludeTags.join(',')]);
 
   // Check if user can create articles
   useEffect(() => {
@@ -80,6 +104,24 @@ const Articles = () => {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
+    setPage(1);
+  };
+
+  const toggleTagFilter = (tag: string) => {
+    setTagFilters((prev) => {
+      const current = prev[tag];
+      const next: Record<string, 'include' | 'exclude'> = { ...prev };
+
+      if (!current) {
+        next[tag] = 'include';
+      } else if (current === 'include') {
+        next[tag] = 'exclude';
+      } else {
+        delete next[tag];
+      }
+
+      return next;
+    });
     setPage(1);
   };
 
@@ -167,10 +209,10 @@ const Articles = () => {
           {tags.length > 0 && (
             <div className="flex flex-wrap gap-2">
               <Badge
-                variant={selectedTag === '' ? 'default' : 'outline'}
+                variant={Object.keys(tagFilters).length === 0 ? 'default' : 'outline'}
                 className="cursor-pointer hover:bg-primary/80"
                 onClick={() => {
-                  setSelectedTag('');
+                  setTagFilters({});
                   setPage(1);
                 }}
               >
@@ -180,11 +222,12 @@ const Articles = () => {
               {tags.slice(0, 15).map((tag) => (
                 <Badge
                   key={tag.tag}
-                  variant={selectedTag === tag.tag ? 'default' : 'outline'}
-                  className="cursor-pointer hover:bg-primary/80"
+                  variant={tagFilters[tag.tag] === 'include' ? 'default' : 'outline'}
+                  className={`cursor-pointer hover:bg-primary/80 ${
+                    tagFilters[tag.tag] === 'exclude' ? 'border-destructive text-destructive' : ''
+                  }`}
                   onClick={() => {
-                    setSelectedTag(tag.tag);
-                    setPage(1);
+                    toggleTagFilter(tag.tag);
                   }}
                 >
                   {tag.tag} ({tag.count})

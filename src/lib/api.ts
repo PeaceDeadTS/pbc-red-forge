@@ -116,6 +116,8 @@ export const articlesApi = {
     status?: string;
     author_id?: string;
     tag?: string;
+    include_tags?: string[];
+    exclude_tags?: string[];
     search?: string;
   }) => api.get('/articles', { params }),
 
@@ -167,6 +169,17 @@ export const articlesApi = {
 
   // Delete article
   delete: (id: string) => api.delete(`/articles/${id}`),
+};
+
+// Tags API
+export const tagsApi = {
+  // Get tags list (generic, by target type)
+  getTags: (params?: { target_type?: string; search?: string; limit?: number; offset?: number }) =>
+    api.get('/tags', { params }),
+
+  // Get tags for specific target
+  getTargetTags: (params: { target_type: string; target_id: string }) =>
+    api.get('/tags/target', { params }),
 };
 
 // Reactions API

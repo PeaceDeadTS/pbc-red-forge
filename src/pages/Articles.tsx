@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -106,7 +106,7 @@ const Articles = () => {
     if (!isQueryStateInitialized) {
       setIsQueryStateInitialized(true);
     }
-  }, [searchParams, tagFilters, search, sortBy, sortOrder, page, isQueryStateInitialized]);
+  }, [searchParams]);
 
   // Синхронизация состояния (поиск, сортировка, страница, теги) с URL
   useEffect(() => {
@@ -116,6 +116,7 @@ const Articles = () => {
 
     setSearchParams((prev) => {
       const params = new URLSearchParams(prev);
+      const before = params.toString();
 
       // Теги
       params.delete('include_tags');
@@ -146,6 +147,11 @@ const Articles = () => {
         params.set('page', String(page));
       } else {
         params.delete('page');
+      }
+
+      const after = params.toString();
+      if (before === after) {
+        return prev;
       }
 
       return params;
@@ -209,7 +215,7 @@ const Articles = () => {
     setPage(1);
   };
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     setPage(1);
   };

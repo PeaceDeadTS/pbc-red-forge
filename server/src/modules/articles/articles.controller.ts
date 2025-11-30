@@ -1,4 +1,4 @@
-import { Router, Response } from 'express';
+import { Router, Request, Response } from 'express';
 import { authMiddleware, optionalAuthMiddleware, AuthRequest } from '../../shared/index.js';
 import { articlesService } from './articles.service.js';
 import {

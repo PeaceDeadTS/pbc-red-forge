@@ -353,5 +353,12 @@
       "drafts": "Borradores",
       "private": "Privados"
     }
+  },
+  "reactions": {
+    "like": "Me gusta",
+    "liked": "Te ha gustado",
+    "signInToLike": "Inicia sesión para indicar que te gusta",
+    "likeCount": "{{count}} me gusta",
+    "likeCount_plural": "{{count}} me gusta"
   }
 }

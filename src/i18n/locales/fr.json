@@ -353,5 +353,12 @@
       "drafts": "Brouillons",
       "private": "Privés"
     }
+  },
+  "reactions": {
+    "like": "J’aime",
+    "liked": "Aimé",
+    "signInToLike": "Connectez-vous pour aimer",
+    "likeCount": "{{count}} mention j’aime",
+    "likeCount_plural": "{{count}} mentions j’aime"
   }
 }

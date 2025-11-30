@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router, Response } from 'express';
 import { reactionsService } from './reactions.service.js';
 import {
   toggleReactionSchema,
@@ -7,7 +7,7 @@ import {
   getBatchReactionsSchema,
   ReactionsError,
 } from './reactions.types.js';
-import { authMiddleware, optionalAuthMiddleware } from '../../shared/middleware/auth.middleware.js';
+import { authMiddleware, optionalAuthMiddleware, AuthRequest } from '../../shared/index.js';
 
 const router = Router();
 
@@ -16,7 +16,7 @@ const router = Router();
  * Toggle a reaction (add/remove)
  * Requires authentication
  */
-router.post('/toggle', authMiddleware, async (req: Request, res: Response) => {
+router.post('/toggle', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parsed = toggleReactionSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -51,7 +51,7 @@ router.post('/toggle', authMiddleware, async (req: Request, res: Response) => {
  * Get reaction stats for a target
  * Optional authentication (to get user's reaction)
  */
-router.get('/stats', optionalAuthMiddleware, async (req: Request, res: Response) => {
+router.get('/stats', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parsed = getReactionsQuerySchema.safeParse(req.query);
     if (!parsed.success) {
@@ -81,7 +81,7 @@ router.get('/stats', optionalAuthMiddleware, async (req: Request, res: Response)
  * Get reaction stats for multiple targets
  * Optional authentication (to get user's reactions)
  */
-router.post('/batch', optionalAuthMiddleware, async (req: Request, res: Response) => {
+router.post('/batch', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parsed = getBatchReactionsSchema.safeParse(req.body);
     if (!parsed.success) {
@@ -111,7 +111,7 @@ router.post('/batch', optionalAuthMiddleware, async (req: Request, res: Response
  * Get current user's reactions
  * Requires authentication
  */
-router.get('/my', authMiddleware, async (req: Request, res: Response) => {
+router.get('/my', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parsed = getUserReactionsQuerySchema.safeParse(req.query);
     if (!parsed.success) {

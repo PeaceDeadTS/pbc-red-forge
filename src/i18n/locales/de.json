@@ -353,5 +353,12 @@
       "drafts": "Entwürfe",
       "private": "Privat"
     }
+  },
+  "reactions": {
+    "like": "Gefällt mir",
+    "liked": "Gefällt mir",
+    "signInToLike": "Melden Sie sich an, um zu liken",
+    "likeCount": "{{count}} Like",
+    "likeCount_plural": "{{count}} Likes"
   }
 }

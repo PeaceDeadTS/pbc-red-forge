@@ -353,5 +353,12 @@
       "drafts": "Черновики",
       "private": "Приватные"
     }
+  },
+  "reactions": {
+    "like": "Нравится",
+    "liked": "Понравилось",
+    "signInToLike": "Войдите, чтобы поставить лайк",
+    "likeCount": "{{count}} лайк",
+    "likeCount_plural": "{{count}} лайков"
   }
 }

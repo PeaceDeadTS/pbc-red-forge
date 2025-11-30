@@ -1,17 +1,21 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Eye, Calendar, Tag } from 'lucide-react';
+import { Eye, Calendar, Tag, Heart } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { ReactionButton } from '@/components/reactions';
 import type { ArticleListItem } from '@/types/article';
+import type { ReactionStats } from '@/types/reaction';
 
 interface ArticleCardProps {
   article: ArticleListItem;
   index?: number;
+  reactionStats?: ReactionStats | null;
+  onReactionChange?: (stats: ReactionStats) => void;
 }
 
-export const ArticleCard = ({ article, index = 0 }: ArticleCardProps) => {
+export const ArticleCard = ({ article, index = 0, reactionStats, onReactionChange }: ArticleCardProps) => {
   const { t } = useTranslation();
 
   const authorInitials = (article.author.display_name || article.author.username)
@@ -131,6 +135,20 @@ export const ArticleCard = ({ article, index = 0 }: ArticleCardProps) => {
                   <span>{article.tags.length}</span>
                 </div>
               )}
+            </div>
+            
+            {/* Like button - stop propagation to prevent navigation */}
+            <div onClick={(e) => e.preventDefault()}>
+              <ReactionButton
+                targetType="article"
+                targetId={article.id}
+                initialStats={reactionStats}
+                variant="ghost"
+                size="sm"
+                showCount={true}
+                onStatsChange={onReactionChange}
+                className="h-7 px-2"
+              />
             </div>
           </div>
         </div>

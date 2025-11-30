@@ -7,5 +7,8 @@ export { usersRoutes, usersService, UsersError } from './users/index.js';
 // Articles module
 export { articlesRoutes, articlesService, ArticlesError } from './articles/index.js';
 
+// Reactions module
+export { reactionsRoutes, reactionsService, ReactionsError } from './reactions/index.js';
+
 // Generation module (placeholder for future microservice)
 export { generationRoutes, generationService, GenerationError } from './generation/index.js';

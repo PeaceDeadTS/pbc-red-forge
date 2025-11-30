@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { Calendar, Eye, Tag, Edit, Trash2, ArrowLeft, Loader2, User, Lock, FileEdit } from 'lucide-react';
+import { Calendar, Eye, Tag, Edit, Trash2, ArrowLeft, Loader2, User, Lock, FileEdit, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -11,6 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { articlesApi } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { ReactionButton } from '@/components/reactions';
 import type { Article } from '@/types/article';
 
 const ArticleDetail = () => {
@@ -196,6 +197,15 @@ const ArticleDetail = () => {
               <Eye className="h-4 w-4" />
               <span>{article.views} {t('articles.views')}</span>
             </div>
+
+            {/* Like button */}
+            <ReactionButton
+              targetType="article"
+              targetId={article.id}
+              variant="ghost"
+              size="sm"
+              showCount={true}
+            />
           </div>
 
           {/* Tags */}

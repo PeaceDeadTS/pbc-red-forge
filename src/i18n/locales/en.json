@@ -353,5 +353,12 @@
       "drafts": "Drafts",
       "private": "Private"
     }
+  },
+  "reactions": {
+    "like": "Like",
+    "liked": "Liked",
+    "signInToLike": "Sign in to like",
+    "likeCount": "{{count}} like",
+    "likeCount_plural": "{{count}} likes"
   }
 }

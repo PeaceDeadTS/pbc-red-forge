@@ -168,3 +168,22 @@ export const articlesApi = {
   // Delete article
   delete: (id: string) => api.delete(`/articles/${id}`),
 };
+
+// Reactions API
+export const reactionsApi = {
+  // Toggle reaction (like/unlike)
+  toggle: (data: { target_type: string; target_id: string; reaction_type?: string }) =>
+    api.post('/reactions/toggle', data),
+
+  // Get reaction stats for a single target
+  getStats: (params: { target_type: string; target_id: string }) =>
+    api.get('/reactions/stats', { params }),
+
+  // Get reaction stats for multiple targets (batch)
+  getBatch: (data: { target_type: string; target_ids: string[] }) =>
+    api.post('/reactions/batch', data),
+
+  // Get current user's reactions
+  getMyReactions: (params?: { target_type?: string; limit?: number; offset?: number }) =>
+    api.get('/reactions/my', { params }),
+};

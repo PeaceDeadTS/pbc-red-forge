@@ -192,6 +192,23 @@ export const ensureSchema = async (): Promise<void> => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
+  // Reactions table (universal for articles, models, comments, etc.)
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS reactions (
+      id VARCHAR(36) PRIMARY KEY,
+      user_id VARCHAR(36) NOT NULL,
+      target_type ENUM('article') NOT NULL,
+      target_id VARCHAR(36) NOT NULL,
+      reaction_type ENUM('like') NOT NULL DEFAULT 'like',
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      UNIQUE KEY unique_user_reaction (user_id, target_type, target_id, reaction_type),
+      INDEX idx_target (target_type, target_id),
+      INDEX idx_user_id (user_id),
+      INDEX idx_created_at (created_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+
   // Seed default rights
   for (const right of ALL_RIGHTS) {
     await pool.execute(

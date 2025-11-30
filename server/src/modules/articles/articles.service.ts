@@ -213,6 +213,8 @@ export const articlesService = {
 
     const tags = await articlesRepository.getTags(articleId);
 
+    const baseViews = article.views ?? 0;
+
     return {
       id: article.id,
       title: article.title,
@@ -256,12 +258,16 @@ export const articlesService = {
       }
     }
 
+    const shouldIncrement = incrementViews && article.status === 'published' && article.author_id !== requesterId;
+
     // Increment views for published articles when viewed by non-author
-    if (incrementViews && article.status === 'published' && article.author_id !== requesterId) {
+    if (shouldIncrement) {
       await articlesRepository.incrementViews(article.id);
     }
 
     const tags = await articlesRepository.getTags(article.id);
+
+    const baseViews = article.views ?? 0;
 
     return {
       id: article.id,
@@ -271,7 +277,7 @@ export const articlesService = {
       excerpt: article.excerpt,
       content: article.content,
       status: article.status,
-      views: article.views + (incrementViews && article.status === 'published' && article.author_id !== requesterId ? 1 : 0),
+      views: baseViews + (shouldIncrement ? 1 : 0),
       author: {
         id: article.author_id,
         username: article.author_username,

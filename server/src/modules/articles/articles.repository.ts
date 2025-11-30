@@ -229,7 +229,7 @@ export const articlesRepository = {
    */
   async incrementViews(id: string): Promise<void> {
     await pool.execute<ResultSetHeader>(
-      'UPDATE articles SET views = views + 1 WHERE id = ?',
+      'UPDATE articles SET views = COALESCE(views, 0) + 1 WHERE id = ?',
       [id]
     );
   },

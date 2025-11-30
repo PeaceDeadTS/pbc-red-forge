@@ -140,7 +140,7 @@ const ArticleDetail = () => {
         </div>
       )}
 
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="container mx-auto px-4 max-w-5xl xl:max-w-6xl">
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -270,29 +270,31 @@ const ArticleDetail = () => {
           </Card>
 
           {/* Author card */}
-          <Card className="mt-8 bg-card/50 backdrop-blur border-border">
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-4">
-                <Link to={`/profile/${article.author.id}`}>
-                  <Avatar className="h-16 w-16 border-2 border-primary/20">
-                    <AvatarImage src={article.author.avatar_url || undefined} />
-                    <AvatarFallback className="text-xl bg-gradient-primary text-primary-foreground">
-                      {authorInitials}
-                    </AvatarFallback>
-                  </Avatar>
-                </Link>
-                <div className="flex-1">
-                  <p className="text-sm text-muted-foreground mb-1">{t('articles.writtenBy')}</p>
-                  <Link to={`/profile/${article.author.id}`} className="hover:text-primary">
-                    <h3 className="text-xl font-semibold">
-                      {article.author.display_name || article.author.username}
-                    </h3>
+          <Card className="mt-6 bg-card/40 backdrop-blur border-border/60">
+            <CardContent className="py-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <Link to={`/profile/${article.author.id}`}>
+                    <Avatar className="h-10 w-10 border border-primary/20">
+                      <AvatarImage src={article.author.avatar_url || undefined} />
+                      <AvatarFallback className="text-sm bg-gradient-primary text-primary-foreground">
+                        {authorInitials}
+                      </AvatarFallback>
+                    </Avatar>
                   </Link>
-                  <p className="text-muted-foreground">@{article.author.username}</p>
+                  <div className="leading-tight">
+                    <p className="text-xs text-muted-foreground mb-0.5">{t('articles.writtenBy')}</p>
+                    <Link to={`/profile/${article.author.id}`} className="hover:text-primary">
+                      <p className="text-sm font-semibold">
+                        {article.author.display_name || article.author.username}
+                      </p>
+                    </Link>
+                    <p className="text-xs text-muted-foreground">@{article.author.username}</p>
+                  </div>
                 </div>
                 <Link to={`/profile/${article.author.id}`}>
-                  <Button variant="outline">
-                    <User className="h-4 w-4 mr-2" />
+                  <Button variant="outline" size="sm" className="whitespace-nowrap">
+                    <User className="h-3 w-3 mr-2" />
                     {t('articles.viewProfile')}
                   </Button>
                 </Link>

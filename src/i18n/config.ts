@@ -42,8 +42,6 @@ i18n
       caches: ['localStorage'],
       // Key name in localStorage
       lookupLocalStorage: 'i18nextLng',
-      // Check these navigator properties for browser language
-      lookupFromNavigatorLanguage: true,
     },
     interpolation: {
       escapeValue: false,

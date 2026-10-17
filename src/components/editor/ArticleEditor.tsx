@@ -1,10 +1,9 @@
 import { useCallback } from 'react';
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react';
+import { useEditor, EditorContent } from '@tiptap/react';
+import { BubbleMenu } from '@tiptap/react/menus';
 import StarterKit from '@tiptap/starter-kit';
 import Placeholder from '@tiptap/extension-placeholder';
-import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
-import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Highlight from '@tiptap/extension-highlight';
 import Typography from '@tiptap/extension-typography';
@@ -53,22 +52,21 @@ export const ArticleEditor = ({ content, onChange, placeholder }: ArticleEditorP
         heading: {
           levels: [1, 2, 3],
         },
+        link: {
+          openOnClick: false,
+          HTMLAttributes: {
+            class: 'text-primary underline',
+          },
+        },
       }),
       Placeholder.configure({
         placeholder: placeholder || t('articles.editor.placeholder'),
-      }),
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          class: 'text-primary underline',
-        },
       }),
       Image.configure({
         HTMLAttributes: {
           class: 'rounded-lg max-w-full',
         },
       }),
-      Underline,
       TextAlign.configure({
         types: ['heading', 'paragraph'],
       }),
@@ -297,7 +295,6 @@ export const ArticleEditor = ({ content, onChange, placeholder }: ArticleEditorP
       {editor && (
         <BubbleMenu
           editor={editor}
-          tippyOptions={{ duration: 100 }}
           className="flex items-center gap-1 p-1 rounded-lg border border-border bg-popover shadow-lg"
         >
           <Toggle

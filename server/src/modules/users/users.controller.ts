@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, optionalAuthMiddleware, AuthRequest } from '../../shared/index.js';
+import { authMiddleware, optionalAuthMiddleware, routeParam, AuthRequest } from '../../shared/index.js';
 import { usersService, UsersError } from './users.service.js';
 import {
   updateProfileSchema,
@@ -52,7 +52,7 @@ router.get('/groups/list', async (_req, res: Response): Promise<void> => {
  */
 router.get('/:id', optionalAuthMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const result = await usersService.getProfile(id, req.user?.id);
     res.json(result);
   } catch (error) {
@@ -81,7 +81,7 @@ router.patch('/me', authMiddleware, async (req: AuthRequest, res: Response): Pro
     res.json({ user });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: 'Validation error', details: error.errors });
+      res.status(400).json({ error: 'Validation error', details: error.issues });
       return;
     }
     if (error instanceof UsersError) {
@@ -109,7 +109,7 @@ router.post('/me/change-password', authMiddleware, async (req: AuthRequest, res:
     res.json({ message: 'Password changed successfully' });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: 'Validation error', details: error.errors });
+      res.status(400).json({ error: 'Validation error', details: error.issues });
       return;
     }
     if (error instanceof UsersError) {
@@ -139,13 +139,13 @@ router.patch('/:id/groups', authMiddleware, async (req: AuthRequest, res: Respon
       return;
     }
 
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const data = updateUserGroupsSchema.parse(req.body);
     const groups = await usersService.updateUserGroups(id, data.groups, req.user.id);
     res.json({ groups });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: 'Validation error', details: error.errors });
+      res.status(400).json({ error: 'Validation error', details: error.issues });
       return;
     }
     if (error instanceof UsersError) {

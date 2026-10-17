@@ -10,4 +10,4 @@ export { authMiddleware, optionalAuthMiddleware } from './middleware/index.js';
 export type { AuthRequest, AuthPayload } from './middleware/index.js';
 
 // Utils
-export { parseExpiration } from './utils/index.js';
+export { parseExpiration, routeParam } from './utils/index.js';

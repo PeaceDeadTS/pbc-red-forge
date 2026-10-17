@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { authMiddleware, optionalAuthMiddleware, AuthRequest } from '../../shared/index.js';
+import { authMiddleware, optionalAuthMiddleware, routeParam, AuthRequest } from '../../shared/index.js';
 import { articlesService } from './articles.service.js';
 import {
   createArticleSchema,
@@ -19,7 +19,7 @@ router.get('/', optionalAuthMiddleware, async (req: AuthRequest, res: Response) 
   try {
     const queryResult = getArticlesQuerySchema.safeParse(req.query);
     if (!queryResult.success) {
-      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.errors });
+      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.issues });
     }
 
     const userId = req.user?.id;
@@ -58,7 +58,7 @@ router.get('/my', authMiddleware, async (req: AuthRequest, res: Response) => {
     const userId = req.user!.id;
     const queryResult = getArticlesQuerySchema.safeParse({ ...req.query, author_id: userId, status: 'all' });
     if (!queryResult.success) {
-      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.errors });
+      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.issues });
     }
 
     const result = await articlesService.getList(queryResult.data, userId);
@@ -108,7 +108,7 @@ router.get('/can-create', authMiddleware, async (req: AuthRequest, res: Response
  */
 router.get('/user/:userId', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { userId } = req.params;
+    const userId = routeParam(req.params.userId);
     const requesterId = req.user?.id;
     
     // If viewing own articles, show all statuses; otherwise only published
@@ -116,7 +116,7 @@ router.get('/user/:userId', optionalAuthMiddleware, async (req: AuthRequest, res
     
     const queryResult = getArticlesQuerySchema.safeParse({ ...req.query, author_id: userId, status });
     if (!queryResult.success) {
-      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.errors });
+      return res.status(400).json({ error: 'Invalid query parameters', details: queryResult.error.issues });
     }
 
     const result = await articlesService.getList(queryResult.data, requesterId);
@@ -138,7 +138,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
     const parseResult = createArticleSchema.safeParse(req.body);
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Validation error', details: parseResult.error.errors });
+      return res.status(400).json({ error: 'Validation error', details: parseResult.error.issues });
     }
 
     const userId = req.user!.id;
@@ -160,7 +160,7 @@ router.post('/', authMiddleware, async (req: AuthRequest, res: Response) => {
  */
 router.get('/:idOrSlug', optionalAuthMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { idOrSlug } = req.params;
+    const idOrSlug = routeParam(req.params.idOrSlug);
     const userId = req.user?.id;
 
     // Try to find by ID first (UUID format), then by slug
@@ -193,10 +193,10 @@ router.get('/:idOrSlug', optionalAuthMiddleware, async (req: AuthRequest, res: R
  */
 router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const parseResult = updateArticleSchema.safeParse(req.body);
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Validation error', details: parseResult.error.errors });
+      return res.status(400).json({ error: 'Validation error', details: parseResult.error.issues });
     }
 
     const userId = req.user!.id;
@@ -218,10 +218,10 @@ router.patch('/:id', authMiddleware, async (req: AuthRequest, res: Response) => 
  */
 router.patch('/:id/status', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const parseResult = updateArticleStatusSchema.safeParse(req.body);
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Validation error', details: parseResult.error.errors });
+      return res.status(400).json({ error: 'Validation error', details: parseResult.error.issues });
     }
 
     const userId = req.user!.id;
@@ -243,7 +243,7 @@ router.patch('/:id/status', authMiddleware, async (req: AuthRequest, res: Respon
  */
 router.delete('/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const userId = req.user!.id;
 
     await articlesService.delete(id, userId);

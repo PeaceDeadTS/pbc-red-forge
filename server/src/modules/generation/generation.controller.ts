@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, AuthRequest } from '../../shared/index.js';
+import { authMiddleware, routeParam, AuthRequest } from '../../shared/index.js';
 import { generationService, GenerationError } from './generation.service.js';
 import { createGenerationJobSchema } from './generation.types.js';
 
@@ -36,7 +36,7 @@ router.post('/jobs', authMiddleware, async (req: AuthRequest, res: Response): Pr
     res.status(201).json({ job });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      res.status(400).json({ error: 'Validation error', details: error.errors });
+      res.status(400).json({ error: 'Validation error', details: error.issues });
       return;
     }
     if (error instanceof GenerationError) {
@@ -86,7 +86,7 @@ router.get('/jobs/:id', authMiddleware, async (req: AuthRequest, res: Response):
       return;
     }
 
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     const job = await generationService.getJob(id, req.user.id);
     res.json({ job });
   } catch (error) {
@@ -110,7 +110,7 @@ router.delete('/jobs/:id', authMiddleware, async (req: AuthRequest, res: Respons
       return;
     }
 
-    const { id } = req.params;
+    const id = routeParam(req.params.id);
     await generationService.cancelJob(id, req.user.id);
     res.json({ message: 'Job cancelled' });
   } catch (error) {

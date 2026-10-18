@@ -44,7 +44,7 @@ const Articles = () => {
     .filter(([, mode]) => mode === 'exclude')
     .map(([tag]) => tag);
 
-  // Инициализация состояния из URL (поиск, сортировка, страница, теги)
+  // Initialize state from the URL (search, sort, page, tags)
   useEffect(() => {
     const includeFromUrl = searchParams.getAll('include_tags');
     const excludeFromUrl = searchParams.getAll('exclude_tags');
@@ -108,7 +108,7 @@ const Articles = () => {
     }
   }, [searchParams]);
 
-  // Синхронизация состояния (поиск, сортировка, страница, теги) с URL
+  // Sync state (search, sort, page, tags) to the URL
   useEffect(() => {
     if (!isQueryStateInitialized) {
       return;
@@ -118,7 +118,7 @@ const Articles = () => {
       const params = new URLSearchParams(prev);
       const before = params.toString();
 
-      // Теги
+      // Tags
       params.delete('include_tags');
       params.delete('exclude_tags');
       params.delete('tag');
@@ -131,18 +131,18 @@ const Articles = () => {
         params.append('exclude_tags', tag);
       });
 
-      // Поиск
+      // Search
       if (search) {
         params.set('search', search);
       } else {
         params.delete('search');
       }
 
-      // Сортировка
+      // Sort
       params.set('sort', sortBy);
       params.set('order', sortOrder);
 
-      // Страница
+      // Page
       if (page > 1) {
         params.set('page', String(page));
       } else {

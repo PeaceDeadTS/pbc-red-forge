@@ -194,18 +194,13 @@ export const usersService = {
     }
 
     const targetGroup = uniqueGroups[0];
-
-    // Get valid group IDs for the target group
     const validGroups = await usersRepository.getGroupsByNames([targetGroup]);
-    const validGroupMap = new Map(validGroups.map((g) => [g.name, g.id]));
-
-    // Remove all current group memberships
-    await usersRepository.removeAllGroupMemberships(targetUserId);
-
-    const groupId = validGroupMap.get(targetGroup);
-    if (groupId) {
-      await usersRepository.addUserToGroup(targetUserId, groupId, adminId);
+    const groupId = validGroups.find((group) => group.name === targetGroup)?.id;
+    if (typeof groupId !== 'number') {
+      throw new UsersError('Unknown group', 400);
     }
+
+    await usersRepository.replaceUserGroup(targetUserId, groupId, adminId);
 
     // Return updated groups
     return usersRepository.getUserGroups(targetUserId);
@@ -216,6 +211,6 @@ export const usersService = {
    */
   async isAdmin(userId: string): Promise<boolean> {
     const rights = await usersRepository.getUserRights(userId);
-    return rights.includes('*') || rights.includes('manage_users') || rights.includes('view_admin_panel');
+    return rights.includes('*') || rights.includes('manage_users');
   },
 };

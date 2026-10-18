@@ -212,6 +212,20 @@ export const ensureSchema = async (): Promise<void> => {
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   `);
 
+  await pool.execute(`
+    CREATE TABLE IF NOT EXISTS app_flags (
+      name VARCHAR(64) PRIMARY KEY,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+  `);
+
+  // One-time bootstrap marker. If any account already exists, never auto-assign administrator again.
+  await pool.execute(`
+    INSERT IGNORE INTO app_flags (name)
+    SELECT 'bootstrap_admin_done' FROM DUAL
+    WHERE EXISTS (SELECT 1 FROM users)
+  `);
+
   // Seed default rights
   for (const right of ALL_RIGHTS) {
     await pool.execute(

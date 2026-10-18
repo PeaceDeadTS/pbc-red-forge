@@ -6,7 +6,7 @@ export { jwtConfig } from './config/index.js';
 export type { JwtConfig } from './config/index.js';
 
 // Middleware
-export { authMiddleware, optionalAuthMiddleware } from './middleware/index.js';
+export { authMiddleware, optionalAuthMiddleware, credentialRateLimit } from './middleware/index.js';
 export type { AuthRequest, AuthPayload } from './middleware/index.js';
 
 // Utils

@@ -199,6 +199,24 @@ export const usersRepository = {
     );
   },
 
+  async replaceUserGroup(userId: string, groupId: number, assignedBy: string): Promise<void> {
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
+      await connection.execute('DELETE FROM user_group_membership WHERE user_id = ?', [userId]);
+      await connection.execute(
+        'INSERT INTO user_group_membership (user_id, group_id, assigned_by) VALUES (?, ?, ?)',
+        [userId, groupId, assignedBy]
+      );
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  },
+
   /**
    * Check if user exists
    */

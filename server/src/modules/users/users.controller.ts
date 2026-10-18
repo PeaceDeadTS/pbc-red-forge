@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, optionalAuthMiddleware, routeParam, AuthRequest } from '../../shared/index.js';
+import { authMiddleware, credentialRateLimit, optionalAuthMiddleware, routeParam, AuthRequest } from '../../shared/index.js';
 import { usersService, UsersError } from './users.service.js';
 import {
   updateProfileSchema,
@@ -97,7 +97,7 @@ router.patch('/me', authMiddleware, async (req: AuthRequest, res: Response): Pro
  * POST /api/v1/users/me/change-password
  * Change own password
  */
-router.post('/me/change-password', authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post('/me/change-password', credentialRateLimit, authMiddleware, async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     if (!req.user) {
       res.status(401).json({ error: 'Not authenticated' });

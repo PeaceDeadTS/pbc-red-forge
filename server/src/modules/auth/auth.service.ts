@@ -7,6 +7,7 @@ import { authRepository } from './auth.repository.js';
 import type { RegisterInput, LoginInput, AuthUserResponse } from './auth.types.js';
 
 const SALT_ROUNDS = 12;
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('not-a-real-password', SALT_ROUNDS);
 
 export interface RegisterResult {
   token: string;
@@ -26,34 +27,22 @@ export const authService = {
     data: RegisterInput,
     meta: { userAgent: string | null; ipAddress: string | null }
   ): Promise<RegisterResult> {
-    // Check if username or email already exists
-    const exists = await authRepository.existsByUsernameOrEmail(data.username, data.email);
-    if (exists) {
-      throw new AuthError('User with this username or email already exists', 400);
-    }
-
-    // Check if this is the first user (will become administrator)
-    const userCount = await authRepository.getUserCount();
-    const isFirstUser = userCount === 0;
-
-    // Hash password
     const passwordHash = await bcrypt.hash(data.password, SALT_ROUNDS);
     const userId = uuidv4();
 
-    // Create user
-    await authRepository.createUser({
-      id: userId,
-      username: data.username,
-      email: data.email,
-      passwordHash,
-      displayName: data.display_name || data.username,
-    });
-
-    // Assign user to groups
-    if (isFirstUser) {
-      await this.assignToGroup(userId, 'administrator');
-    } else {
-      await this.assignToGroup(userId, 'user');
+    try {
+      await authRepository.createUserAndAssignInitialGroup({
+        id: userId,
+        username: data.username,
+        email: data.email,
+        passwordHash,
+        displayName: data.display_name || data.username,
+      });
+    } catch (error) {
+      if (isDuplicateUser(error)) {
+        throw new AuthError('Unable to register with the provided details', 400);
+      }
+      throw error;
     }
 
     // Get assigned groups
@@ -66,7 +55,7 @@ export const authService = {
     const token = jwt.sign(
       { userId, sessionId },
       jwtConfig.secret,
-      { expiresIn: jwtConfig.expiresIn }
+      { expiresIn: jwtConfig.expiresIn, algorithm: 'HS256' }
     );
 
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
@@ -103,13 +92,9 @@ export const authService = {
   ): Promise<LoginResult> {
     // Find user by username or email
     const user = await authRepository.findByUsernameOrEmail(data.login);
-    if (!user) {
-      throw new AuthError('Invalid login or password', 401);
-    }
-
-    // Verify password
-    const validPassword = await bcrypt.compare(data.password, user.password_hash);
-    if (!validPassword) {
+    const passwordHash = user?.password_hash ?? DUMMY_PASSWORD_HASH;
+    const validPassword = await bcrypt.compare(data.password, passwordHash);
+    if (!user || !validPassword) {
       throw new AuthError('Invalid login or password', 401);
     }
 
@@ -122,7 +107,7 @@ export const authService = {
     const token = jwt.sign(
       { userId: user.id, sessionId },
       jwtConfig.secret,
-      { expiresIn }
+      { expiresIn, algorithm: 'HS256' }
     );
 
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
@@ -204,6 +189,12 @@ export const authService = {
 /**
  * Custom error class for auth errors
  */
+const isDuplicateUser = (error: unknown): boolean =>
+  typeof error === 'object' &&
+  error !== null &&
+  'code' in error &&
+  (error as { code?: string }).code === 'ER_DUP_ENTRY';
+
 export class AuthError extends Error {
   constructor(
     message: string,

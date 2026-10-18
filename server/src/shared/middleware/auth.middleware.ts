@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import { jwtConfig } from '../config/index.js';
 import { pool } from '../database/index.js';
@@ -16,6 +17,38 @@ export interface AuthRequest extends Request {
   };
 }
 
+const verifyOptions: jwt.VerifyOptions = { algorithms: ['HS256'] };
+
+const readActiveSession = async (token: string): Promise<{ id: string; sessionId: string } | null> => {
+  const decoded = jwt.verify(token, jwtConfig.secret, verifyOptions) as AuthPayload;
+  if (typeof decoded?.userId !== 'string' || typeof decoded?.sessionId !== 'string') {
+    return null;
+  }
+
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  const [sessions] = await pool.execute<RowDataPacket[]>(
+    'SELECT id FROM sessions WHERE id = ? AND user_id = ? AND token_hash = ? AND expires_at > NOW()',
+    [decoded.sessionId, decoded.userId, tokenHash]
+  );
+
+  if (sessions.length === 0) {
+    return null;
+  }
+
+  return {
+    id: decoded.userId,
+    sessionId: decoded.sessionId,
+  };
+};
+
+const bearerToken = (req: Request): string | null => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    return null;
+  }
+  return authHeader.substring(7);
+};
+
 /**
  * Authentication middleware - blocks request if not authenticated
  */
@@ -25,31 +58,19 @@ export const authMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
+    const token = bearerToken(req);
+    if (!token) {
       res.status(401).json({ error: 'Token not provided' });
       return;
     }
 
-    const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, jwtConfig.secret) as AuthPayload;
-
-    // Verify session exists and is not expired
-    const [sessions] = await pool.execute<RowDataPacket[]>(
-      'SELECT * FROM sessions WHERE id = ? AND user_id = ? AND expires_at > NOW()',
-      [decoded.sessionId, decoded.userId]
-    );
-
-    if (sessions.length === 0) {
+    const session = await readActiveSession(token);
+    if (!session) {
       res.status(401).json({ error: 'Session expired or invalid' });
       return;
     }
 
-    req.user = {
-      id: decoded.userId,
-      sessionId: decoded.sessionId,
-    };
-
+    req.user = session;
     next();
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
@@ -73,30 +94,19 @@ export const optionalAuthMiddleware = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader?.startsWith('Bearer ')) {
+    const token = bearerToken(req);
+    if (!token) {
       next();
       return;
     }
 
-    const token = authHeader.substring(7);
-    const decoded = jwt.verify(token, jwtConfig.secret) as AuthPayload;
-
-    const [sessions] = await pool.execute<RowDataPacket[]>(
-      'SELECT * FROM sessions WHERE id = ? AND user_id = ? AND expires_at > NOW()',
-      [decoded.sessionId, decoded.userId]
-    );
-
-    if (sessions.length > 0) {
-      req.user = {
-        id: decoded.userId,
-        sessionId: decoded.sessionId,
-      };
+    const session = await readActiveSession(token);
+    if (session) {
+      req.user = session;
     }
 
     next();
   } catch {
-    // Ignore token errors for optional authentication
     next();
   }
 };

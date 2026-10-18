@@ -120,11 +120,9 @@ const ArticleDetail = () => {
   let contentHtml = '';
   try {
     const contentJson = JSON.parse(article.content);
-    // Simple rendering - in production use TipTap's generateHTML
     contentHtml = renderTipTapContent(contentJson);
   } catch {
-    // If not JSON, treat as plain text/HTML
-    contentHtml = article.content;
+    contentHtml = `<p>${escapeHtml(article.content)}</p>`;
   }
 
   return (
@@ -317,22 +315,55 @@ const ArticleDetail = () => {
   );
 };
 
-// Simple TipTap content renderer
-// In production, use @tiptap/html or generateHTML from TipTap
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function safeHttpUrl(value: unknown): string | null {
+  if (typeof value !== 'string' || value.length === 0 || value.length > 2000) return null;
+  try {
+    const url = new URL(value);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return url.href;
+  } catch {
+    return null;
+  }
+}
+
+type TipTapNode = {
+  type: string;
+  content?: unknown[];
+  text?: string;
+  attrs?: Record<string, unknown>;
+  marks?: { type: string; attrs?: Record<string, unknown> }[];
+};
+
 function renderTipTapContent(json: { type: string; content?: unknown[] }): string {
   if (!json || !json.content) return '';
 
-  const renderNode = (node: { type: string; content?: unknown[]; text?: string; attrs?: Record<string, unknown>; marks?: { type: string; attrs?: Record<string, unknown> }[] }): string => {
+  const renderNode = (node: TipTapNode): string => {
+    const inner = () => (node.content || []).map((child) => renderNode(child as TipTapNode)).join('');
+
     switch (node.type) {
       case 'doc':
-        return (node.content || []).map((n) => renderNode(n as typeof node)).join('');
+        return inner();
       case 'paragraph':
-        return `<p>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</p>`;
-      case 'heading':
-        const level = (node.attrs?.level as number) || 1;
-        return `<h${level}>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</h${level}>`;
-      case 'text':
-        let text = node.text || '';
+        return `<p>${inner()}</p>`;
+      case 'heading': {
+        const level = node.attrs?.level;
+        const tag =
+          typeof level === 'number' && Number.isInteger(level) && level >= 1 && level <= 6
+            ? `h${level}`
+            : 'p';
+        return `<${tag}>${inner()}</${tag}>`;
+      }
+      case 'text': {
+        let text = escapeHtml(node.text || '');
         if (node.marks) {
           for (const mark of node.marks) {
             switch (mark.type) {
@@ -345,9 +376,13 @@ function renderTipTapContent(json: { type: string; content?: unknown[] }): strin
               case 'code':
                 text = `<code>${text}</code>`;
                 break;
-              case 'link':
-                text = `<a href="${mark.attrs?.href || '#'}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+              case 'link': {
+                const href = safeHttpUrl(mark.attrs?.href);
+                text = href
+                  ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer">${text}</a>`
+                  : text;
                 break;
+              }
               case 'underline':
                 text = `<u>${text}</u>`;
                 break;
@@ -358,28 +393,33 @@ function renderTipTapContent(json: { type: string; content?: unknown[] }): strin
           }
         }
         return text;
+      }
       case 'bulletList':
-        return `<ul>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</ul>`;
+        return `<ul>${inner()}</ul>`;
       case 'orderedList':
-        return `<ol>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</ol>`;
+        return `<ol>${inner()}</ol>`;
       case 'listItem':
-        return `<li>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</li>`;
+        return `<li>${inner()}</li>`;
       case 'blockquote':
-        return `<blockquote>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</blockquote>`;
+        return `<blockquote>${inner()}</blockquote>`;
       case 'codeBlock':
-        return `<pre><code>${(node.content || []).map((n) => renderNode(n as typeof node)).join('')}</code></pre>`;
-      case 'image':
-        return `<img src="${node.attrs?.src || ''}" alt="${node.attrs?.alt || ''}" />`;
+        return `<pre><code>${inner()}</code></pre>`;
+      case 'image': {
+        const src = safeHttpUrl(node.attrs?.src);
+        if (!src) return '';
+        const alt = escapeHtml(typeof node.attrs?.alt === 'string' ? node.attrs.alt : '');
+        return `<img src="${escapeHtml(src)}" alt="${alt}" />`;
+      }
       case 'horizontalRule':
         return '<hr />';
       case 'hardBreak':
         return '<br />';
       default:
-        return (node.content || []).map((n) => renderNode(n as typeof node)).join('');
+        return inner();
     }
   };
 
-  return renderNode(json as Parameters<typeof renderNode>[0]);
+  return renderNode(json as TipTapNode);
 }
 
 export default ArticleDetail;

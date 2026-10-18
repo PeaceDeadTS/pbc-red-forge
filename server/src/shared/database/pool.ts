@@ -3,11 +3,19 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+const databaseName = process.env.DB_NAME;
+const databaseUser = process.env.DB_USER;
+const databasePassword = process.env.DB_PASSWORD;
+
+if (!databaseName || !databaseUser || databasePassword === undefined) {
+  throw new Error('DB_NAME, DB_USER and DB_PASSWORD must be set. An empty DB_PASSWORD is allowed only when the variable is present.');
+}
+
 const getConnectionConfig = (): mysql.PoolOptions => {
   const baseConfig: mysql.PoolOptions = {
-    database: process.env.DB_NAME || 'pbcred',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
+    database: databaseName,
+    user: databaseUser,
+    password: databasePassword,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,

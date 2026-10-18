@@ -1,6 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { z } from 'zod';
-import { authMiddleware, AuthRequest } from '../../shared/index.js';
+import { authMiddleware, credentialRateLimit, AuthRequest } from '../../shared/index.js';
 import { authService, AuthError } from './auth.service.js';
 import { registerSchema, loginSchema } from './auth.types.js';
 
@@ -10,7 +10,7 @@ const router = Router();
  * POST /api/v1/auth/register
  * Register new user
  */
-router.post('/register', async (req: Request, res: Response): Promise<void> => {
+router.post('/register', credentialRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const data = registerSchema.parse(req.body);
 
@@ -41,7 +41,7 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
  * POST /api/v1/auth/login
  * Login user
  */
-router.post('/login', async (req: Request, res: Response): Promise<void> => {
+router.post('/login', credentialRateLimit, async (req: Request, res: Response): Promise<void> => {
   try {
     const data = loginSchema.parse(req.body);
 

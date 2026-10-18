@@ -52,10 +52,17 @@ const ensureUniqueSlug = async (baseSlug: string, excludeId?: string): Promise<s
 /**
  * Check if user has permission to create articles
  */
+const hasRight = (rights: string[], names: string[]): boolean =>
+  rights.includes('*') || names.some((name) => rights.includes(name));
+
 const canCreateArticles = async (userId: string): Promise<boolean> => {
   const rights = await usersRepository.getUserRights(userId);
-  // Wildcard (*) means all rights, or specific right to create content
-  return rights.includes('*') || rights.includes('create_content');
+  return hasRight(rights, ['create_content', 'create_articles']);
+};
+
+const canPublishArticles = async (userId: string): Promise<boolean> => {
+  const rights = await usersRepository.getUserRights(userId);
+  return hasRight(rights, ['publish_content', 'publish_articles']);
 };
 
 /**
@@ -76,6 +83,11 @@ export const articlesService = {
       throw new ArticlesError('You do not have permission to create articles', 403);
     }
 
+    const status = input.status || 'draft';
+    if (status === 'published' && !(await canPublishArticles(userId))) {
+      throw new ArticlesError('You do not have permission to publish articles', 403);
+    }
+
     const id = uuidv4();
     
     // Generate or validate slug
@@ -90,7 +102,7 @@ export const articlesService = {
       header_image: input.header_image,
       excerpt: input.excerpt,
       content: input.content,
-      status: input.status || 'draft',
+      status,
     });
 
     // Set tags if provided
@@ -121,6 +133,10 @@ export const articlesService = {
     const userIsAdmin = await isAdmin(userId);
     if (article.author_id !== userId && !userIsAdmin) {
       throw new ArticlesError('You do not have permission to edit this article', 403);
+    }
+
+    if (input.status === 'published' && article.status !== 'published' && !(await canPublishArticles(userId))) {
+      throw new ArticlesError('You do not have permission to publish articles', 403);
     }
 
     // Validate slug rules and uniqueness if changing
@@ -170,6 +186,10 @@ export const articlesService = {
     const userIsAdmin = await isAdmin(userId);
     if (article.author_id !== userId && !userIsAdmin) {
       throw new ArticlesError('You do not have permission to change this article status', 403);
+    }
+
+    if (status === 'published' && article.status !== 'published' && !(await canPublishArticles(userId))) {
+      throw new ArticlesError('You do not have permission to publish articles', 403);
     }
 
     await articlesRepository.update(articleId, { status });

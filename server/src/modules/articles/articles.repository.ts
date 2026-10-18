@@ -8,6 +8,29 @@ const normalizeTagFilter = (value?: string | string[]): string[] => {
   return arr.map((t) => t.toLowerCase());
 };
 
+const appendArticleVisibility = (
+  conditions: string[],
+  params: (string | number)[],
+  query: GetArticlesQuery,
+  requesterId?: string,
+  isAdminUser?: boolean
+): void => {
+  if (!isAdminUser) {
+    if (requesterId) {
+      conditions.push('(a.status = ? OR a.author_id = ?)');
+      params.push('published', requesterId);
+    } else {
+      conditions.push('a.status = ?');
+      params.push('published');
+    }
+  }
+
+  if (query.status && query.status !== 'all') {
+    conditions.push('a.status = ?');
+    params.push(query.status);
+  }
+};
+
 export interface ArticleRow extends RowDataPacket {
   id: string;
   author_id: string;
@@ -187,20 +210,7 @@ export const articlesRepository = {
     const conditions: string[] = [];
     const params: (string | number)[] = [];
 
-    // Status filter
-    if (query.status && query.status !== 'all') {
-      conditions.push('a.status = ?');
-      params.push(query.status);
-    } else if (!isAdmin) {
-      // Non-admins can only see published articles or their own
-      if (requesterId) {
-        conditions.push('(a.status = ? OR a.author_id = ?)');
-        params.push('published', requesterId);
-      } else {
-        conditions.push('a.status = ?');
-        params.push('published');
-      }
-    }
+    appendArticleVisibility(conditions, params, query, requesterId, isAdmin);
 
     // Author filter
     if (query.author_id) {
@@ -282,18 +292,7 @@ export const articlesRepository = {
     const conditions: string[] = [];
     const params: (string | number)[] = [];
 
-    if (query.status && query.status !== 'all') {
-      conditions.push('a.status = ?');
-      params.push(query.status);
-    } else if (!isAdmin) {
-      if (requesterId) {
-        conditions.push('(a.status = ? OR a.author_id = ?)');
-        params.push('published', requesterId);
-      } else {
-        conditions.push('a.status = ?');
-        params.push('published');
-      }
-    }
+    appendArticleVisibility(conditions, params, query, requesterId, isAdmin);
 
     if (query.author_id) {
       conditions.push('a.author_id = ?');
